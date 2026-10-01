@@ -30,7 +30,7 @@ jobs:
         run: |
           set -e
 
-          mkdir -p app/src/main/java/com/watchtoearn/app
+          mkdir -p app/src/main/java/com/watchearn/testapp
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/drawable
@@ -44,9 +44,8 @@ jobs:
 
           sudo apt-get update && sudo apt-get install -y imagemagick
 
-          # If icon.png doesn't exist, create a dummy fallback app icon
           if [ ! -f "icon.png" ]; then
-            convert -size 512x512 xc:"#050b1e" -fill "#fbbf24" -gravity center -pointsize 180 -annotate +0+0 "W" icon.png
+            convert -size 512x512 xc:"#050b1e" -fill "#38bdf8" -gravity center -pointsize 180 -annotate +0+0 "T" icon.png
           fi
 
           for size in 48:mdpi 72:hdpi 96:xhdpi 144:xxhdpi 192:xxxhdpi; do
@@ -75,7 +74,7 @@ jobs:
                   maven { url "https://ads.startappservice.com/android-sdk" }
               }
           }
-          rootProject.name = "WatchToEarn"
+          rootProject.name = "WatchEarnTest"
           include(":app")
           EOF
 
@@ -88,14 +87,14 @@ jobs:
           cat > app/build.gradle <<'EOF'
           plugins { id 'com.android.application' }
           android {
-              namespace "com.watchtoearn.app"
+              namespace "com.watchearn.testapp"
               compileSdk 35
               defaultConfig {
-                  applicationId "com.watchtoearn.app"
+                  applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 55
-                  versionName "7.1"
+                  versionCode 1
+                  versionName "1.0-test"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -123,7 +122,7 @@ jobs:
               <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
               <application
                   android:allowBackup="true"
-                  android:label="Watch To Earn"
+                  android:label="Watch &amp; Earn Test"
                   android:icon="@mipmap/ic_launcher"
                   android:roundIcon="@mipmap/ic_launcher_round"
                   android:supportsRtl="true"
@@ -145,8 +144,8 @@ jobs:
           </manifest>
           EOF
 
-          cat > app/src/main/java/com/watchtoearn/app/MainActivity.java <<'EOF'
-          package com.watchtoearn.app;
+          cat > app/src/main/java/com/watchearn/testapp/MainActivity.java <<'EOF'
+          package com.watchearn.testapp;
 
           import android.annotation.SuppressLint;
           import android.app.Activity;
@@ -277,11 +276,11 @@ jobs:
         run: |
           set -e
           mkdir -p apk-output
-          cp app/build/outputs/apk/release/app-release.apk apk-output/WatchToEarn.apk
+          cp app/build/outputs/apk/release/app-release.apk apk-output/WatchEarn-Test.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: WatchToEarn-APK
-          path: apk-output/WatchToEarn.apk
+          name: WatchEarn-Test-APK
+          path: apk-output/WatchEarn-Test.apk
           if-no-files-found: error
