@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <title>Watch to Earn - Test</title>
 
-<!-- Start.io Integration Script Header -->
 <script>
   window.startIoAppId = "206781301";
 </script>
@@ -13,9 +12,6 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-/* =====================================
-   THEME VARIABLES (DAY / NIGHT AUTO)
-   ===================================== */
 :root {
   --bg-color: #0b0f19;
   --text-main: #f1f5f9;
@@ -76,7 +72,6 @@ letter-spacing:-0.2px;
 transition:background .3s ease, color .3s ease
 }
 
-/* TOP APP BAR */
 .top-bar{
 padding:calc(env(safe-area-inset-top, 0px) + 14px) 18px 14px;
 display:flex;
@@ -95,7 +90,6 @@ transition:background .3s ease
 .brand-title{font-size:17px;font-weight:900;letter-spacing:-0.4px;color:var(--text-main)}
 .brand-sub{font-size:11px;color:var(--text-muted);font-weight:600}
 
-/* FLOATING COIN PILL */
 .balance-pill{
 display:flex;
 align-items:center;
@@ -111,7 +105,6 @@ box-shadow:0 0 18px rgba(245,158,11,0.15)
 
 .wrap{padding:16px 16px 20px}
 
-/* CARDS */
 .card{
 background:var(--card-bg);
 border-radius:24px;
@@ -124,7 +117,6 @@ transition:background .3s ease, border .3s ease
 h2{margin:0 0 6px;font-size:20px;font-weight:800;color:var(--text-main);letter-spacing:-0.3px}
 .muted{color:var(--text-muted);font-size:14px;line-height:1.5}
 
-/* VIDEO ARENA */
 .video{
 height:200px;
 background:var(--video-bg);
@@ -153,7 +145,6 @@ margin-bottom:12px;
 box-shadow:0 0 24px rgba(245,158,11,0.45)
 }
 
-/* ACTION BUTTONS */
 .btn{
 width:100%;
 border:0;
@@ -171,7 +162,6 @@ transition:all .15s ease
 .btn:active{transform:scale(0.98);box-shadow:0 2px 10px rgba(139,92,246,0.2)}
 .btn:disabled{opacity:.4;box-shadow:none}
 
-/* NEON LIVE TICKER */
 .live-ticker-wrap{
 background:var(--ticker-bg);
 border:1px solid var(--ticker-border);
@@ -199,7 +189,6 @@ letter-spacing:0.4px
 .ticker-content{display:inline-block;white-space:nowrap;animation:tickerScroll 22s linear infinite}
 @keyframes tickerScroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-/* INPUTS */
 .input{
 width:100%;
 padding:16px;
@@ -273,7 +262,6 @@ text-align:center
 .stat strong{font-size:22px;font-weight:800;color:#a855f7;display:block;margin-bottom:4px}
 .stat span{font-size:12px;color:var(--text-muted);font-weight:600}
 
-/* WHEEL */
 .wheelbox{text-align:center;position:relative;margin:16px auto}
 .wheel{
 width:min(310px,80vw);
@@ -368,7 +356,6 @@ font-weight:800;
 box-shadow:0 10px 30px rgba(0,0,0,0.3)
 }
 
-/* BOTTOM NAVIGATION */
 .nav{
 position:fixed;
 bottom:0;
@@ -403,7 +390,6 @@ transition:color .2s
 .page{display:none}
 .page.active{display:block}
 
-/* AUTH MODAL */
 .auth-overlay{
 position:fixed;
 top:0;left:0;right:0;bottom:0;
@@ -463,7 +449,6 @@ display:inline-block;
 margin:6px 0 16px
 }
 
-/* LOGOUT DIALOG */
 .dialog-overlay{
 position:fixed;
 top:0;left:0;right:0;bottom:0;
@@ -535,7 +520,6 @@ transition:all .15s ease
 
 <body>
 
-<!-- TOP APP BAR -->
 <header class="top-bar">
   <div class="brand">
     <div style="width:40px;height:40px;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(99,102,241,0.45));">
@@ -582,7 +566,6 @@ transition:all .15s ease
 
 <main class="wrap">
 
-<!-- LIVE TICKER DISPLAY -->
 <div class="live-ticker-wrap">
 <span class="ticker-badge">⚡ LIVE</span>
 <div class="ticker-marquee">
@@ -592,11 +575,8 @@ transition:all .15s ease
 </div>
 </div>
 
-<!-- =========================
-     PAGE: HOME
-     ========================= -->
+<!-- PAGE: HOME -->
 <section id="home" class="page active">
-
 <div class="card">
 <h2>🎥 Watch & Earn</h2>
 <div class="muted">
@@ -630,13 +610,9 @@ style="margin-top:16px;background:linear-gradient(135deg,#059669,#10b981,#34d399
 🎁 CLAIM DAILY BONUS
 </button>
 </div>
-
 </section>
 
-
-<!-- =========================
-     PAGE: EARN
-     ========================= -->
+<!-- PAGE: EARN -->
 <section id="earn" class="page">
 <div class="card">
 <h2>💎 Coin Rewards</h2>
@@ -660,10 +636,7 @@ Ensure ads are watched completely to receive your coin rewards.
 </div>
 </section>
 
-
-<!-- =========================
-     PAGE: SPIN
-     ========================= -->
+<!-- PAGE: SPIN -->
 <section id="spin" class="page">
 <div class="card">
 <h2>🎡 Spin & Win</h2>
@@ -699,15 +672,12 @@ style="background:linear-gradient(135deg,#ec4899,#f43f5e,#fb923c)">
 </button>
 
 <div class="notice">
-Watch a sponsored ad before each spin.
+Watch a sponsored video before each spin.
 </div>
 </div>
 </section>
 
-
-<!-- =========================
-     PAGE: WITHDRAW
-     ========================= -->
+<!-- PAGE: WITHDRAW -->
 <section id="withdraw" class="page">
 <div class="card">
 <h2>💸 Withdraw</h2>
@@ -755,10 +725,7 @@ REQUEST WITHDRAWAL
 </div>
 </section>
 
-
-<!-- =========================
-     PAGE: REFERRAL
-     ========================= -->
+<!-- PAGE: REFERRAL -->
 <section id="referral" class="page">
 <div class="card">
 <h2>👥 Referral</h2>
@@ -789,10 +756,7 @@ style="margin-top:10px;background:linear-gradient(135deg,#059669,#10b981)">
 </div>
 </section>
 
-
-<!-- =========================
-     PAGE: PROFILE
-     ========================= -->
+<!-- PAGE: PROFILE -->
 <section id="profile" class="page">
 <div class="card">
 <h2>👤 Profile</h2>
@@ -845,8 +809,6 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
 
 </main>
 
-
-<!-- BOTTOM NAVIGATION BAR -->
 <nav class="nav">
 <button onclick="showPage('home')">
 <b>🏠</b>Home
@@ -908,13 +870,11 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
       <div class="muted" style="font-size:13px">Secure Cloud Balance & Account (Test Mode)</div>
     </div>
 
-    <!-- TABS -->
     <div class="auth-tabs" id="authTabsNav">
       <button class="auth-tab active" id="tabBtnLogin" onclick="switchAuthTab('login')">LOGIN</button>
       <button class="auth-tab" id="tabBtnSignup" onclick="switchAuthTab('signup')">SIGN UP</button>
     </div>
 
-    <!-- LOGIN FORM -->
     <div id="authLoginSection" class="auth-section active">
       <input class="input" id="authLoginPhone" type="tel" maxlength="10" placeholder="10-Digit Mobile Number">
       
@@ -930,7 +890,6 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
       <button class="btn" id="btnSubmitLogin" onclick="handleLogin()">SECURE LOGIN</button>
     </div>
 
-    <!-- SIGNUP FORM -->
     <div id="authSignupSection" class="auth-section">
       <input class="input" id="authSignupPhone" type="tel" maxlength="10" placeholder="10-Digit Mobile Number">
       
@@ -947,7 +906,6 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
       <button class="btn" id="btnSubmitSignup" onclick="handleSignup()">CREATE ACCOUNT</button>
     </div>
 
-    <!-- FORGOT PIN FORM -->
     <div id="authForgotSection" class="auth-section">
       <h3 style="margin:4px 0 10px;font-size:16px;color:#a855f7">Reset Forgotten PIN</h3>
       <input class="input" id="authForgotPhone" type="tel" maxlength="10" placeholder="Registered Mobile Number">
@@ -968,7 +926,6 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
   </div>
 </div>
 
-<!-- LOGOUT CONFIRMATION DIALOG -->
 <div id="logoutDialog" class="dialog-overlay" style="display:none">
   <div class="dialog-card">
     <div class="logout-icon-bubble">
@@ -991,15 +948,11 @@ style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding
 (function(){
 'use strict';
 
-/* ========================================================
-   FIREBASE REALTIME DB PATHS (SEPARATED TEST ENVIRONMENT)
-   ======================================================== */
 var FIREBASE_BASE_URL = "https://watchtoearn-4862d-default-rtdb.firebaseio.com";
 var FIREBASE_DB_URL = FIREBASE_BASE_URL + "/test_withdrawals";
 var FIREBASE_USERS_URL = FIREBASE_BASE_URL + "/test_users";
 var SUPPORT_EMAIL = "help.watchtoearn@gmail.com";
 
-/* MECHANICAL AUDIO & HAPTIC */
 var audioCtx = null;
 function getAudioContext(){
   if(!audioCtx){
@@ -1063,7 +1016,6 @@ function triggerHaptic(pattern){
   }
 }
 
-/* AUTOMATIC DAY / NIGHT THEME */
 function applyAutoTheme(){
   var hr = new Date().getHours();
   var isDay = (hr >= 6 && hr < 19);
@@ -1076,7 +1028,6 @@ function applyAutoTheme(){
 applyAutoTheme();
 setInterval(applyAutoTheme, 300000);
 
-/* DAILY BONUS COUNTDOWN */
 var bonusTimerInterval = null;
 function checkBonusState(){
   var btn = $('bonusBtn');
@@ -1129,6 +1080,7 @@ var spinning=false;
 var pendingRewardType=null;
 var isWatchCooldown=false;
 var MAX_DAILY_ADS=100;
+var pageSwitchCount = 0;
 
 function $(id){
 return document.getElementById(id);
@@ -1172,7 +1124,6 @@ function showAuthError(errElementId, targetInputId, msg){
   toast(msg);
 }
 
-/* FIREBASE SYNC (TEST PATH) */
 function syncBalanceToFirebase(additionalData){
   var phone = localStorage.getItem('wte_phone');
   if(!phone) return;
@@ -1212,6 +1163,13 @@ p.classList.remove('active');
 var p=$(id);
 if(p){
 p.classList.add('active');
+}
+
+pageSwitchCount++;
+if(pageSwitchCount % 2 === 0){
+  if(window.AndroidAd && typeof window.AndroidAd.showInterstitial === 'function'){
+    window.AndroidAd.showInterstitial();
+  }
 }
 
 if(id==='withdraw'){
@@ -1354,9 +1312,6 @@ ctx.textAlign='center';
 ctx.fillText('SPIN',cx,cy+8);
 }
 
-/* ==============================================
-   START.IO NATIVE BRIDGE CALLS
-   ============================================== */
 window.triggerAdMob=function(type){
   getAudioContext();
   if(type==='watch'){
@@ -1371,14 +1326,10 @@ window.triggerAdMob=function(type){
 
   pendingRewardType=type;
 
-  // Calls MainActivity Java Bridge for Start.io Rewarded Video
   if(window.AndroidAd && typeof window.AndroidAd.showRewarded==='function'){
     window.AndroidAd.showRewarded();
   }else{
-    toast('Start.io test mode active');
-    setTimeout(function(){
-      window.adMobRewardEarned();
-    },1200);
+    toast('Searching for sponsor video...');
   }
 };
 
@@ -1419,7 +1370,6 @@ window.adMobRewardEarned=function(){
   pendingRewardType=null;
 };
 
-/* SPIN ACTIONS */
 window.startSpin=function(){
   if(spinning)return;
 
@@ -1480,7 +1430,6 @@ function doSpin(){
   }, totalDuration + 100);
 }
 
-/* WITHDRAW CONTROLLER (TEST FIREBASE) */
 window.withdrawCoins=function(){
   var upi=$('upi').value.trim();
   var amount=Number($('amount').value);
@@ -1645,7 +1594,6 @@ return '<div class="history">'
 }).join('');
 }
 
-/* REFERRAL */
 function referralCode(){
 var c=localStorage.getItem('wte_ref');
 if(!c){
@@ -1699,7 +1647,6 @@ var url='https://api.whatsapp.com/send?text='+encodeURIComponent(text);
 window.location.href=url;
 };
 
-/* AUTHENTICATION DASHBOARD (TEST USERS NODE) */
 window.switchAuthTab=function(mode){
   clearAuthErrors();
   $('tabBtnLogin').classList.toggle('active', mode==='login');$('tabBtnSignup').classList.toggle('active', mode==='signup');
@@ -1912,7 +1859,6 @@ window.handleResetPin=function(){
     });
 };
 
-/* LOGOUT MODAL CONTROLS */
 window.openLogoutDialog=function(){
   $('logoutDialog').style.display = 'flex';
 };
@@ -1983,7 +1929,6 @@ function updateProfileDisplay(){
   }
 }
 
-/* PROFILE & SUPPORT */
 window.saveProfile=function(){
 var name=$('profileName').value.trim();
 if(!name){
@@ -2010,7 +1955,6 @@ var body = encodeURIComponent("Hello Support Team,\n\nUser: " + user + "\nPhone:
 window.location.href = "mailto:" + SUPPORT_EMAIL + "?subject=" + subject + "&body=" + body;
 };
 
-/* INITIALIZATION */
 function init(){
 saveBalance();
 drawWheel();
