@@ -94,8 +94,8 @@ jobs:
                   applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 8
-                  versionName "1.7"
+                  versionCode 9
+                  versionName "1.8"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -207,7 +207,7 @@ jobs:
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
-                  // Initialize Start.io in Live Mode
+                  // Initialize Start.io
                   StartAppSDK.init(this, STARTIO_APP_ID, false);
                   StartAppSDK.setTestAdsEnabled(false);
                   StartAppAd.disableSplash();
@@ -240,7 +240,7 @@ jobs:
                   mainWebView.addJavascriptInterface(new AdBridge(), "AndroidAd");
                   mainWebView.loadUrl("file:///android_asset/index.html");
 
-                  // Proper Banner Setup with Auto-Retry
+                  // Banner setup with auto-retry
                   startAppBanner.setBannerListener(new BannerListener() {
                       @Override
                       public void onReceiveAd(View bannerView) {
@@ -304,7 +304,6 @@ jobs:
                           } else {
                               Toast.makeText(MainActivity.this, "Connecting to sponsor ad...", Toast.LENGTH_SHORT).show();
                               
-                              // Smart Fallback: If Pure Video is unavailable, show Fullscreen Ad with completion reward
                               StartAppAd fallbackAd = new StartAppAd(MainActivity.this);
                               fallbackAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
                                   @Override
