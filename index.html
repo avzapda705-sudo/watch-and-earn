@@ -1,222 +1,2035 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Watch & Earn</title>
-  
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background: #0f172a;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .header {
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #1e293b;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-      margin-bottom: 25px;
-    }
-    .coin-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f59e0b;
-      color: #000;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 16px;
-    }
-    .card {
-      width: 100%;
-      max-width: 400px;
-      background: #1e293b;
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-      margin-bottom: 80px;
-    }
-    h2 {
-      font-size: 20px;
-      text-align: center;
-      color: #38bdf8;
-      margin-bottom: 8px;
-    }
-    .btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: transform 0.1s ease;
-    }
-    .btn:active {
-      transform: scale(0.98);
-    }
-    .btn-reward {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
-    }
-    .btn-interstitial {
-      background: linear-gradient(135deg, #0ea5e9, #0284c7);
-      color: white;
-    }
-    .btn-claim {
-      background: #64748b;
-      color: white;
-    }
-    #ad-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      background: #0f172a;
-      z-index: 999;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>Watch to Earn - Test</title>
 
-  <!-- Start.io Integration Script -->
-  <script>
-    window.startIoAppId = "206781301";
-  </script>
-  <script src="https://ads.startappservice.com/js/startapp-tag.js"></script>
+<!-- Start.io Integration Script Header -->
+<script>
+  window.startIoAppId = "206781301";
+</script>
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+/* =====================================
+   THEME VARIABLES (DAY / NIGHT AUTO)
+   ===================================== */
+:root {
+  --bg-color: #0b0f19;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --topbar-bg: rgba(11,15,25,0.85);
+  --card-bg: linear-gradient(165deg,#161e31,#0f172a);
+  --card-border: rgba(255,255,255,0.07);
+  --card-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  --input-bg: #0b0f19;
+  --input-border: rgba(255,255,255,0.1);
+  --nav-bg: rgba(11,15,25,0.92);
+  --nav-border: rgba(255,255,255,0.08);
+  --ticker-bg: rgba(15,23,42,0.8);
+  --ticker-border: rgba(255,255,255,0.08);
+  --box-bg: #0b0f19;
+  --box-border: rgba(255,255,255,0.08);
+  --video-bg: radial-gradient(circle at center,#1e1b4b 0%,#0c0f1d 75%);
+  --toast-bg: #ffffff;
+  --toast-color: #0b0f19;
+  --rate-badge-bg: rgba(139,92,246,0.08);
+  --rate-badge-border: rgba(168,85,247,0.5);
+  --rate-text: #cbd5e1;
+  --modal-overlay: rgba(0,0,0,0.85);
+}
+
+body.theme-light {
+  --bg-color: #f4f6fb;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --topbar-bg: rgba(255,255,255,0.88);
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 8px 24px rgba(15,23,42,0.05);
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+  --nav-bg: rgba(255,255,255,0.92);
+  --nav-border: #e2e8f0;
+  --ticker-bg: #0f172a;
+  --ticker-border: transparent;
+  --box-bg: #f8fafc;
+  --box-border: #e2e8f0;
+  --video-bg: linear-gradient(180deg,#18181b,#09090b);
+  --toast-bg: #0f172a;
+  --toast-color: #ffffff;
+  --rate-badge-bg: #faf5ff;
+  --rate-badge-border: #c084fc;
+  --rate-text: #475569;
+  --modal-overlay: rgba(15,23,42,0.75);
+}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg-color);
+color:var(--text-main);
+padding-bottom:120px;
+letter-spacing:-0.2px;
+transition:background .3s ease, color .3s ease
+}
+
+/* TOP APP BAR */
+.top-bar{
+padding:calc(env(safe-area-inset-top, 0px) + 14px) 18px 14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:var(--topbar-bg);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+position:sticky;
+top:0;
+z-index:50;
+border-bottom:1px solid var(--card-border);
+transition:background .3s ease
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-title{font-size:17px;font-weight:900;letter-spacing:-0.4px;color:var(--text-main)}
+.brand-sub{font-size:11px;color:var(--text-muted);font-weight:600}
+
+/* FLOATING COIN PILL */
+.balance-pill{
+display:flex;
+align-items:center;
+gap:8px;
+background:var(--card-bg);
+border:1.5px solid rgba(245,158,11,0.35);
+padding:6px 14px;
+border-radius:30px;
+box-shadow:0 0 18px rgba(245,158,11,0.15)
+}
+.balance-pill strong{font-size:18px;font-weight:900;color:#fbbf24}
+.balance-pill span{font-size:16px}
+
+.wrap{padding:16px 16px 20px}
+
+/* CARDS */
+.card{
+background:var(--card-bg);
+border-radius:24px;
+padding:22px;
+margin-bottom:16px;
+border:1px solid var(--card-border);
+box-shadow:var(--card-shadow);
+transition:background .3s ease, border .3s ease
+}
+h2{margin:0 0 6px;font-size:20px;font-weight:800;color:var(--text-main);letter-spacing:-0.3px}
+.muted{color:var(--text-muted);font-size:14px;line-height:1.5}
+
+/* VIDEO ARENA */
+.video{
+height:200px;
+background:var(--video-bg);
+color:#fff;
+border-radius:20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:16px;
+font-weight:700;
+margin:16px 0;
+border:1.5px solid rgba(99,102,241,0.3);
+box-shadow:inset 0 0 28px rgba(99,102,241,0.2)
+}
+.video .icon{
+font-size:32px;
+background:linear-gradient(135deg,#f59e0b,#ef4444);
+width:64px;
+height:64px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+margin-bottom:12px;
+box-shadow:0 0 24px rgba(245,158,11,0.45)
+}
+
+/* ACTION BUTTONS */
+.btn{
+width:100%;
+border:0;
+border-radius:16px;
+padding:16px;
+background:linear-gradient(135deg,#6366f1,#8b5cf6,#d946ef);
+color:#fff;
+font-weight:800;
+font-size:15px;
+letter-spacing:0.5px;
+cursor:pointer;
+box-shadow:0 8px 24px rgba(139,92,246,0.38);
+transition:all .15s ease
+}
+.btn:active{transform:scale(0.98);box-shadow:0 2px 10px rgba(139,92,246,0.2)}
+.btn:disabled{opacity:.4;box-shadow:none}
+
+/* NEON LIVE TICKER */
+.live-ticker-wrap{
+background:var(--ticker-bg);
+border:1px solid var(--ticker-border);
+color:#38bdf8;
+padding:10px 14px;
+border-radius:16px;
+margin-bottom:16px;
+display:flex;
+align-items:center;
+overflow:hidden;
+font-size:13px;
+font-weight:700
+}
+.ticker-badge{
+background:#10b981;
+color:#022c22;
+font-size:10px;
+padding:3px 8px;
+border-radius:6px;
+margin-right:10px;
+font-weight:900;
+letter-spacing:0.4px
+}
+.ticker-marquee{white-space:nowrap;overflow:hidden;flex:1}
+.ticker-content{display:inline-block;white-space:nowrap;animation:tickerScroll 22s linear infinite}
+@keyframes tickerScroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* INPUTS */
+.input{
+width:100%;
+padding:16px;
+background:var(--input-bg);
+border:1.5px solid var(--input-border);
+border-radius:15px;
+font-size:15px;
+font-weight:600;
+color:var(--text-main);
+margin:10px 0 14px;
+outline:none;
+transition:border-color .2s
+}
+.input:focus{border-color:#8b5cf6}
+.input.input-error{border-color:#ef4444!important;background:rgba(239,68,68,0.06)!important;animation:shake 0.35s ease}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-6px)}
+  40%,80%{transform:translateX(6px)}
+}
+
+.pin-input-group{
+position:relative;
+width:100%;
+margin:10px 0 14px;
+display:flex;
+align-items:center
+}
+.pin-input-group .input{
+margin:0;
+padding-right:52px
+}
+.eye-btn{
+position:absolute;
+right:14px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+cursor:pointer;
+padding:6px;
+line-height:0;
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--text-muted);
+transition:color .2s, transform .1s
+}
+.eye-btn:active{transform:translateY(-50%) scale(0.9)}
+.eye-btn svg{width:22px;height:22px;fill:currentColor}
+
+.auth-error-msg{
+display:none;
+color:#ef4444;
+font-size:12.5px;
+font-weight:700;
+margin:-6px 0 12px;
+text-align:left;
+padding-left:4px
+}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.stat{
+background:var(--box-bg);
+border:1px solid var(--box-border);
+border-radius:18px;
+padding:16px 12px;
+text-align:center
+}
+.stat strong{font-size:22px;font-weight:800;color:#a855f7;display:block;margin-bottom:4px}
+.stat span{font-size:12px;color:var(--text-muted);font-weight:600}
+
+/* WHEEL */
+.wheelbox{text-align:center;position:relative;margin:16px auto}
+.wheel{
+width:min(310px,80vw);
+height:min(310px,80vw);
+margin:auto;
+transition:transform 4.2s cubic-bezier(.15,.7,.15,1);
+filter:drop-shadow(0 0 20px rgba(99,102,241,0.25))
+}
+.pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:30px;z-index:2}
+
+.rate-badge{
+background:var(--rate-badge-bg);
+border:1.5px dashed var(--rate-badge-border);
+border-radius:16px;
+padding:14px 16px;
+margin:14px 0;
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:6px
+}
+
+.refbox{
+background:var(--box-bg);
+border:1.5px dashed var(--box-border);
+border-radius:16px;
+padding:14px;
+word-break:break-all;
+font-size:13px;
+font-weight:600;
+color:var(--text-main);
+margin-top:10px
+}
+
+.history{
+padding:14px 0;
+border-bottom:1px solid var(--box-border);
+font-size:13.5px;
+line-height:1.5;
+color:var(--text-muted)
+}
+.history b{color:var(--text-main)}
+
+.notice{
+background:rgba(245,158,11,0.1);
+border:1px solid rgba(245,158,11,0.25);
+color:#d97706;
+padding:12px 14px;
+border-radius:14px;
+font-size:13px;
+font-weight:600;
+margin-top:14px
+}
+body:not(.theme-light) .notice{color:#fcd34d}
+
+.rare{
+background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(234,88,12,0.2));
+border:1px solid rgba(245,158,11,0.3);
+padding:12px;
+border-radius:14px;
+margin-top:14px;
+text-align:center;
+font-weight:800;
+color:#b45309;
+font-size:13.5px
+}
+body:not(.theme-light) .rare{color:#fde68a}
+
+.support-card{
+background:var(--box-bg);
+border:1px solid var(--box-border);
+border-radius:20px;
+padding:18px;
+margin-top:18px
+}
+.faq-item{margin-bottom:12px;font-size:13px;line-height:1.5;color:var(--text-muted)}
+.faq-item b{color:var(--text-main)}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:95px;
+transform:translateX(-50%);
+background:var(--toast-bg);
+color:var(--toast-color);
+padding:12px 22px;
+border-radius:30px;
+display:none;
+z-index:200;
+font-size:13.5px;
+font-weight:800;
+box-shadow:0 10px 30px rgba(0,0,0,0.3)
+}
+
+/* BOTTOM NAVIGATION */
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:var(--nav-bg);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+display:flex;
+justify-content:space-around;
+padding:10px 4px calc(env(safe-area-inset-bottom, 0px) + 6px);
+border-top:1px solid var(--nav-border);
+z-index:90;
+transition:background .3s ease
+}
+.nav button{
+background:none;
+border:0;
+font-size:11px;
+color:var(--text-muted);
+font-weight:700;
+cursor:pointer;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:3px;
+transition:color .2s
+}
+.nav button b{font-size:20px;line-height:1}
+.nav button:active{color:#a855f7}
+
+.page{display:none}
+.page.active{display:block}
+
+/* AUTH MODAL */
+.auth-overlay{
+position:fixed;
+top:0;left:0;right:0;bottom:0;
+background:var(--modal-overlay);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+z-index:300;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+.auth-card{
+background:var(--card-bg);
+border:1.5px solid var(--card-border);
+border-radius:28px;
+width:100%;
+max-width:380px;
+padding:26px 22px;
+box-shadow:0 20px 50px rgba(0,0,0,0.6);
+text-align:center
+}
+.auth-header{margin-bottom:20px}
+.auth-tabs{
+display:flex;
+background:var(--box-bg);
+border:1px solid var(--box-border);
+border-radius:14px;
+padding:4px;
+margin-bottom:18px
+}
+.auth-tab{
+flex:1;
+padding:10px 0;
+border:0;
+background:none;
+border-radius:10px;
+font-weight:800;
+font-size:13.5px;
+color:var(--text-muted);
+cursor:pointer;
+transition:all .2s
+}
+.auth-tab.active{
+background:linear-gradient(135deg,#6366f1,#8b5cf6);
+color:#fff;
+box-shadow:0 4px 14px rgba(139,92,246,0.3)
+}
+.auth-section{display:none}
+.auth-section.active{display:block}
+.auth-forgot-link{
+font-size:12.5px;
+font-weight:700;
+color:#a855f7;
+cursor:pointer;
+display:inline-block;
+margin:6px 0 16px
+}
+
+/* LOGOUT DIALOG */
+.dialog-overlay{
+position:fixed;
+top:0;left:0;right:0;bottom:0;
+background:var(--modal-overlay);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+z-index:350;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+.dialog-card{
+background:var(--card-bg);
+border:1.5px solid var(--card-border);
+border-radius:26px;
+width:100%;
+max-width:340px;
+padding:26px 20px;
+text-align:center;
+box-shadow:0 20px 50px rgba(0,0,0,0.6)
+}
+.logout-icon-bubble{
+width:64px;
+height:64px;
+margin:0 auto 14px;
+border-radius:50%;
+background:rgba(239,68,68,0.12);
+border:1.5px solid rgba(239,68,68,0.3);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#ef4444;
+box-shadow:0 0 20px rgba(239,68,68,0.2)
+}
+.dialog-actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:22px
+}
+.btn-cancel{
+background:var(--box-bg);
+border:1.5px solid var(--box-border);
+color:var(--text-main);
+padding:14px;
+border-radius:14px;
+font-weight:800;
+font-size:14px;
+cursor:pointer;
+transition:all .15s ease
+}
+.btn-cancel:active{transform:scale(0.97)}
+.btn-logout{
+background:linear-gradient(135deg,#ef4444,#dc2626);
+border:none;
+color:#fff;
+padding:14px;
+border-radius:14px;
+font-weight:800;
+font-size:14px;
+cursor:pointer;
+box-shadow:0 6px 20px rgba(239,68,68,0.35);
+transition:all .15s ease
+}
+.btn-logout:active{transform:scale(0.97)}
+</style>
 </head>
+
 <body>
 
-  <!-- Top Header with Coin Counter -->
-  <div class="header">
-    <h3>Watch & Earn</h3>
-    <div class="coin-badge">
-      <span>🪙</span>
-      <span id="coin-balance">0</span>
+<!-- TOP APP BAR -->
+<header class="top-bar">
+  <div class="brand">
+    <div style="width:40px;height:40px;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(99,102,241,0.45));">
+      <svg viewBox="0 0 512 512" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="topBgGlow" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#2a3266"/>
+            <stop offset="55%" stop-color="#141936"/>
+            <stop offset="100%" stop-color="#080b18"/>
+          </radialGradient>
+          <linearGradient id="topGoldGrad" x1="15%" y1="10%" x2="85%" y2="90%">
+            <stop offset="0%" stop-color="#fff4b8"/>
+            <stop offset="30%" stop-color="#f59e0b"/>
+            <stop offset="70%" stop-color="#d97706"/>
+            <stop offset="100%" stop-color="#78350f"/>
+          </linearGradient>
+          <linearGradient id="topPlayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="50%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+        </defs>
+        <circle cx="256" cy="256" r="248" fill="url(#topBgGlow)"/>
+        <circle cx="256" cy="256" r="244" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+        <circle cx="256" cy="256" r="236" fill="none" stroke="rgba(129,140,248,0.25)" stroke-width="2"/>
+        <path d="M165 145 C165 130 182 120 195 128 L345 228 C357 236 357 254 345 262 L195 362 C182 370 165 360 165 345 Z" fill="url(#topPlayGrad)" stroke="rgba(255,255,255,0.35)" stroke-width="5"/>
+        <path d="M110 320 C110 405 210 455 315 440" fill="none" stroke="url(#topGoldGrad)" stroke-width="12" stroke-linecap="round" opacity="0.85"/>
+        <circle cx="340" cy="315" r="105" fill="url(#topGoldGrad)" stroke="#ffffff" stroke-width="6"/>
+        <circle cx="340" cy="315" r="88" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-dasharray="8,6"/>
+        <text x="340" y="355" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-weight="900" font-size="115" fill="#451a03" text-anchor="middle">₹</text>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-title">Watch to Earn</div>
+      <div class="brand-sub">Watch • Spin • Earn</div>
     </div>
   </div>
 
-  <!-- Task Card -->
-  <div class="card">
-    <h2>Daily Rewards & Tasks</h2>
-    
-    <!-- Rewarded Video Ad Button -->
-    <button class="btn btn-reward" onclick="handleWatchRewardedAd()">
-      <span>📺</span> Watch Video Ad (+10 Coins)
-    </button>
-
-    <!-- Interstitial Ad Button -->
-    <button class="btn btn-interstitial" onclick="handleShowInterstitialAd()">
-      <span>⚡</span> Next Task (+2 Coins)
-    </button>
-
-    <!-- Claim Reward Bonus -->
-    <button class="btn btn-claim" onclick="claimDailyBonus()">
-      <span>🎁</span> Claim Daily Bonus (+5 Coins)
-    </button>
+  <div class="balance-pill">
+    <span>🪙</span>
+    <strong id="balance">0</strong>
   </div>
+</header>
 
-  <!-- Bottom Banner Space -->
-  <div id="ad-container"></div>
+<main class="wrap">
 
-  <script>
-    // 1. Initial Load & Balance Display
-    document.addEventListener("DOMContentLoaded", function () {
-      updateDisplay();
-      initStartIo();
+<!-- LIVE TICKER DISPLAY -->
+<div class="live-ticker-wrap">
+<span class="ticker-badge">⚡ LIVE</span>
+<div class="ticker-marquee">
+<div class="ticker-content" id="liveTickerText">
+🟢 Rahul (987***@upi) withdrew ₹1 • 🟢 Amit (912***@upi) withdrew ₹2 • 🟢 Priya (884***@upi) withdrew ₹1
+</div>
+</div>
+</div>
+
+<!-- =========================
+     PAGE: HOME
+     ========================= -->
+<section id="home" class="page active">
+
+<div class="card">
+<h2>🎥 Watch & Earn</h2>
+<div class="muted">
+Watch a full video ad to earn 10 coins instantly.
+</div>
+
+<div class="video" id="videoBox">
+<div class="icon">▶️</div>
+<div id="videoText">Ready to Watch</div>
+</div>
+
+<button
+class="btn"
+id="watchBtn"
+onclick="triggerAdMob('watch')">
+▶ WATCH VIDEO AD
+</button>
+</div>
+
+<div class="card">
+<h2>🎁 Daily Bonus</h2>
+<div class="muted">
+Watch an ad to unlock your daily 20–30 coin reward.
+</div>
+
+<button
+class="btn"
+id="bonusBtn"
+onclick="triggerAdMob('bonus')"
+style="margin-top:16px;background:linear-gradient(135deg,#059669,#10b981,#34d399)">
+🎁 CLAIM DAILY BONUS
+</button>
+</div>
+
+</section>
+
+
+<!-- =========================
+     PAGE: EARN
+     ========================= -->
+<section id="earn" class="page">
+<div class="card">
+<h2>💎 Coin Rewards</h2>
+<div class="muted">
+Earn coins by watching high-reward video ads and claiming daily rewards.
+</div>
+
+<div class="row">
+<div class="stat">
+<strong>10 🪙</strong>
+<span>Per video ad</span>
+</div>
+<div class="stat">
+<strong>20–30 🪙</strong>
+<span>Daily bonus</span>
+</div>
+</div>
+<div class="notice">
+Ensure ads are watched completely to receive your coin rewards.
+</div>
+</div>
+</section>
+
+
+<!-- =========================
+     PAGE: SPIN
+     ========================= -->
+<section id="spin" class="page">
+<div class="card">
+<h2>🎡 Spin & Win</h2>
+<div class="muted">
+Win between 5 and 50 coins. Maximum <b>5 spins per day</b>.
+</div>
+
+<div class="rare">
+🎁 30 & 50 coins are rare rewards
+</div>
+
+<div style="margin:16px 0;text-align:center;font-size:18px;font-weight:700">
+Spins left today:
+<b id="spinLeft" style="color:#a855f7;font-size:22px">5</b>/5
+</div>
+
+<div class="wheelbox">
+<div class="pointer">🔻</div>
+<canvas
+id="wheel"
+class="wheel"
+width="600"
+height="600">
+</canvas>
+</div>
+
+<button
+class="btn"
+id="spinBtn"
+onclick="startSpin()"
+style="background:linear-gradient(135deg,#ec4899,#f43f5e,#fb923c)">
+🎡 SPIN NOW
+</button>
+
+<div class="notice">
+Watch a sponsored ad before each spin.
+</div>
+</div>
+</section>
+
+
+<!-- =========================
+     PAGE: WITHDRAW
+     ========================= -->
+<section id="withdraw" class="page">
+<div class="card">
+<h2>💸 Withdraw</h2>
+<div class="muted">
+Instant UPI Transfer • Minimum 200 coins required.
+</div>
+
+<div class="rate-badge">
+  <div style="font-size:13.5px;color:var(--rate-text)">💎 <b>Regular Cashout:</b> 200 Coins = ₹1</div>
+  <div style="font-size:13.5px;color:#d97706">⚡ <b>Super Cashout:</b> 1,000 Coins = ₹10 (Double Benefit!)</div>
+</div>
+
+<div style="
+background:var(--box-bg);
+border:1px solid var(--box-border);
+padding:14px 16px;
+border-radius:16px;
+margin:14px 0;
+font-size:16px;
+display:flex;
+justify-content:space-between;
+align-items:center">
+<span>Available Balance:</span>
+<span><b id="withdrawBalance" style="color:#fbbf24;font-size:20px">0</b> 🪙</span>
+</div>
+
+<input
+class="input"
+id="upi"
+placeholder="Enter UPI ID (e.g., username@upi)">
+
+<input
+class="input"
+id="amount"
+type="number"
+placeholder="Coins to withdraw (Min. 200)">
+
+<button
+class="btn"
+onclick="withdrawCoins()">
+REQUEST WITHDRAWAL
+</button>
+
+<div id="history" style="margin-top:18px"></div>
+</div>
+</section>
+
+
+<!-- =========================
+     PAGE: REFERRAL
+     ========================= -->
+<section id="referral" class="page">
+<div class="card">
+<h2>👥 Referral</h2>
+<div class="muted">
+Share your invite code and invite friends to earn together.
+</div>
+
+<p style="margin:16px 0 6px;font-size:15px">
+<b>Your code:</b>
+<span id="refCode" style="color:#a855f7;font-weight:900;letter-spacing:1px;font-size:17px"></span>
+</p>
+
+<div class="refbox" id="refLink"></div>
+
+<button
+class="btn"
+onclick="copyReferral()"
+style="margin-top:16px">
+📋 COPY LINK
+</button>
+
+<button
+class="btn"
+onclick="shareReferral()"
+style="margin-top:10px;background:linear-gradient(135deg,#059669,#10b981)">
+📲 SHARE VIA WHATSAPP
+</button>
+</div>
+</section>
+
+
+<!-- =========================
+     PAGE: PROFILE
+     ========================= -->
+<section id="profile" class="page">
+<div class="card">
+<h2>👤 Profile</h2>
+
+<div style="background:var(--box-bg);border:1px solid var(--box-border);padding:14px;border-radius:16px;margin:12px 0 16px;font-size:14px;display:flex;justify-content:space-between;align-items:center">
+  <span>📱 Phone:</span>
+  <b id="profilePhoneDisplay" style="color:#a855f7">Loading...</b>
+</div>
+
+<input
+class="input"
+id="profileName"
+placeholder="Enter your name">
+
+<button
+class="btn"
+onclick="saveProfile()">
+💾 SAVE PROFILE
+</button>
+
+<button
+class="btn"
+onclick="openLogoutDialog()"
+style="background:rgba(239,68,68,0.15);border:1.5px solid rgba(239,68,68,0.3);color:#ef4444;box-shadow:none;margin-top:12px">
+🚪 LOGOUT / SWITCH ACCOUNT
+</button>
+
+<div class="support-card">
+<h3 style="margin-top:0;font-size:18px;color:#a855f7">ℹ️ App Info & Support</h3>
+<div class="faq-item">
+<b>• Conversion Rate:</b> 200 Coins = ₹1. Special Bonus: 1,000 Coins = ₹10.
+</div>
+<div class="faq-item">
+<b>• Payout Speed:</b> Payments are processed directly to your registered UPI ID daily.
+</div>
+<div class="faq-item">
+<b>• Fair Usage:</b> Complete tasks genuinely without auto-clickers to ensure smooth payouts.
+</div>
+
+<button
+class="btn"
+onclick="contactSupport()"
+style="background:linear-gradient(135deg,#2563eb,#3b82f6);font-size:15px;padding:14px;margin-top:10px">
+✉️ EMAIL SUPPORT
+</button>
+</div>
+
+</div>
+</section>
+
+</main>
+
+
+<!-- BOTTOM NAVIGATION BAR -->
+<nav class="nav">
+<button onclick="showPage('home')">
+<b>🏠</b>Home
+</button>
+<button onclick="showPage('earn')">
+<b>💎</b>Earn
+</button>
+<button onclick="showPage('spin')">
+<b>🎡</b>Spin
+</button>
+<button onclick="showPage('withdraw')">
+<b>💸</b>Withdraw
+</button>
+<button onclick="showPage('referral')">
+<b>👥</b>Refer
+</button>
+<button onclick="showPage('profile')">
+<b>👤</b>Profile
+</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<!-- AUTH DASHBOARD MODAL -->
+<div id="authOverlay" class="auth-overlay" style="display:none">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div style="width:72px;height:72px;margin:0 auto 12px;filter:drop-shadow(0 0 22px rgba(99,102,241,0.55));">
+        <svg viewBox="0 0 512 512" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="authBgGlow" cx="40%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#2a3266"/>
+              <stop offset="55%" stop-color="#141936"/>
+              <stop offset="100%" stop-color="#080b18"/>
+            </radialGradient>
+            <linearGradient id="authGoldGrad" x1="15%" y1="10%" x2="85%" y2="90%">
+              <stop offset="0%" stop-color="#fff4b8"/>
+              <stop offset="30%" stop-color="#f59e0b"/>
+              <stop offset="70%" stop-color="#d97706"/>
+              <stop offset="100%" stop-color="#78350f"/>
+            </linearGradient>
+            <linearGradient id="authPlayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="50%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#4f46e5"/>
+            </linearGradient>
+          </defs>
+          <circle cx="256" cy="256" r="248" fill="url(#authBgGlow)"/>
+          <circle cx="256" cy="256" r="244" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+          <circle cx="256" cy="256" r="236" fill="none" stroke="rgba(129,140,248,0.25)" stroke-width="2"/>
+          <path d="M165 145 C165 130 182 120 195 128 L345 228 C357 236 357 254 345 262 L195 362 C182 370 165 360 165 345 Z" fill="url(#authPlayGrad)" stroke="rgba(255,255,255,0.35)" stroke-width="5"/>
+          <path d="M110 320 C110 405 210 455 315 440" fill="none" stroke="url(#topGoldGrad)" stroke-width="12" stroke-linecap="round" opacity="0.85"/>
+          <circle cx="340" cy="315" r="105" fill="url(#topGoldGrad)" stroke="#ffffff" stroke-width="6"/>
+          <circle cx="340" cy="315" r="88" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-dasharray="8,6"/>
+          <text x="340" y="355" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-weight="900" font-size="115" fill="#451a03" text-anchor="middle">₹</text>
+        </svg>
+      </div>
+      <h2 style="font-size:22px;margin:0 0 4px">Watch to Earn</h2>
+      <div class="muted" style="font-size:13px">Secure Cloud Balance & Account (Test Mode)</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="auth-tabs" id="authTabsNav">
+      <button class="auth-tab active" id="tabBtnLogin" onclick="switchAuthTab('login')">LOGIN</button>
+      <button class="auth-tab" id="tabBtnSignup" onclick="switchAuthTab('signup')">SIGN UP</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="authLoginSection" class="auth-section active">
+      <input class="input" id="authLoginPhone" type="tel" maxlength="10" placeholder="10-Digit Mobile Number">
+      
+      <div class="pin-input-group">
+        <input class="input" id="authLoginPin" type="password" maxlength="4" placeholder="4-Digit PIN">
+        <button type="button" class="eye-btn" onclick="togglePinVisibility('authLoginPin', this)">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </button>
+      </div>
+      <div class="auth-error-msg" id="authLoginError"></div>
+
+      <span class="auth-forgot-link" onclick="openForgotPin()">Forgot PIN?</span>
+      <button class="btn" id="btnSubmitLogin" onclick="handleLogin()">SECURE LOGIN</button>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="authSignupSection" class="auth-section">
+      <input class="input" id="authSignupPhone" type="tel" maxlength="10" placeholder="10-Digit Mobile Number">
+      
+      <div class="pin-input-group">
+        <input class="input" id="authSignupPin" type="password" maxlength="4" placeholder="Create 4-Digit PIN">
+        <button type="button" class="eye-btn" onclick="togglePinVisibility('authSignupPin', this)">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </button>
+      </div>
+
+      <input class="input" id="authSignupBirthYear" type="number" placeholder="Birth Year (e.g., 2002 - Recovery Key)">
+      <div class="auth-error-msg" id="authSignupError"></div>
+
+      <button class="btn" id="btnSubmitSignup" onclick="handleSignup()">CREATE ACCOUNT</button>
+    </div>
+
+    <!-- FORGOT PIN FORM -->
+    <div id="authForgotSection" class="auth-section">
+      <h3 style="margin:4px 0 10px;font-size:16px;color:#a855f7">Reset Forgotten PIN</h3>
+      <input class="input" id="authForgotPhone" type="tel" maxlength="10" placeholder="Registered Mobile Number">
+      <input class="input" id="authForgotBirthYear" type="number" placeholder="Your Registered Birth Year">
+      
+      <div class="pin-input-group">
+        <input class="input" id="authForgotNewPin" type="password" maxlength="4" placeholder="Enter New 4-Digit PIN">
+        <button type="button" class="eye-btn" onclick="togglePinVisibility('authForgotNewPin', this)">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </button>
+      </div>
+      <div class="auth-error-msg" id="authForgotError"></div>
+
+      <button class="btn" id="btnSubmitForgot" onclick="handleResetPin()">RESET & LOGIN</button>
+      <span class="auth-forgot-link" style="margin-top:12px;display:block" onclick="switchAuthTab('login')">← Back to Login</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOGOUT CONFIRMATION DIALOG -->
+<div id="logoutDialog" class="dialog-overlay" style="display:none">
+  <div class="dialog-card">
+    <div class="logout-icon-bubble">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+      </svg>
+    </div>
+    <h3 style="margin:0 0 8px;font-size:19px;color:var(--text-main)">Log Out Account?</h3>
+    <div class="muted" style="font-size:13px;line-height:1.5">
+      Your balance is safely secured in cloud storage. You can log back in anytime using your phone number and PIN.
+    </div>
+    <div class="dialog-actions">
+      <button class="btn-cancel" onclick="closeLogoutDialog()">CANCEL</button>
+      <button class="btn-logout" onclick="confirmLogout()">LOG OUT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ========================================================
+   FIREBASE REALTIME DB PATHS (SEPARATED TEST ENVIRONMENT)
+   ======================================================== */
+var FIREBASE_BASE_URL = "https://watchtoearn-4862d-default-rtdb.firebaseio.com";
+var FIREBASE_DB_URL = FIREBASE_BASE_URL + "/test_withdrawals";
+var FIREBASE_USERS_URL = FIREBASE_BASE_URL + "/test_users";
+var SUPPORT_EMAIL = "help.watchtoearn@gmail.com";
+
+/* MECHANICAL AUDIO & HAPTIC */
+var audioCtx = null;
+function getAudioContext(){
+  if(!audioCtx){
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if(AudioContext){
+      audioCtx = new AudioContext();
+    }
+  }
+  if(audioCtx && audioCtx.state === 'suspended'){
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playMechanicalTick(){
+  try{
+    var ctx = getAudioContext();
+    if(!ctx) return;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(820, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.022);
+    
+    gain.gain.setValueAtTime(0.35, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.022);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.022);
+  }catch(e){}
+}
+
+function playWinSound(){
+  try{
+    var ctx = getAudioContext();
+    if(!ctx) return;
+    [587.33, 739.99, 880, 1174.66].forEach(function(freq, i){
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      var startTime = ctx.currentTime + (i * 0.08);
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.28, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + 0.48);
     });
+  }catch(e){}
+}
 
-    function getCoins() {
-      return parseInt(localStorage.getItem("watch_earn_coins") || "0");
-    }
+function triggerHaptic(pattern){
+  if(window.navigator && typeof window.navigator.vibrate === 'function'){
+    try{ window.navigator.vibrate(pattern); }catch(e){}
+  }
+}
 
-    function addCoins(amount) {
-      const current = getCoins() + amount;
-      localStorage.setItem("watch_earn_coins", current);
-      updateDisplay();
-    }
+/* AUTOMATIC DAY / NIGHT THEME */
+function applyAutoTheme(){
+  var hr = new Date().getHours();
+  var isDay = (hr >= 6 && hr < 19);
+  if(isDay){
+    document.body.classList.add('theme-light');
+  } else {
+    document.body.classList.remove('theme-light');
+  }
+}
+applyAutoTheme();
+setInterval(applyAutoTheme, 300000);
 
-    function updateDisplay() {
-      document.getElementById("coin-balance").innerText = getCoins();
-    }
-
-    // 2. Initialize Start.io Ads
-    function initStartIo() {
-      if (window.startapp) {
-        // Load Bottom Banner Ad
-        startapp.loadBanner({
-          container: "ad-container",
-          position: "BOTTOM",
-          autoShow: true
-        });
-
-        // Preload Fullscreen Ad
-        startapp.loadInterstitial();
+/* DAILY BONUS COUNTDOWN */
+var bonusTimerInterval = null;
+function checkBonusState(){
+  var btn = $('bonusBtn');
+  if(!btn) return;
+  
+  if(localStorage.getItem('wte_bonus_date') === day()){
+    btn.disabled = true;
+    if(bonusTimerInterval) clearInterval(bonusTimerInterval);
+    
+    function updateRemainingTime(){
+      var now = new Date();
+      var midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      var diff = midnight.getTime() - now.getTime();
+      
+      if(diff <= 0){
+        clearInterval(bonusTimerInterval);
+        btn.disabled = false;
+        btn.textContent = '🎁 CLAIM DAILY BONUS';
+        return;
       }
+      
+      var hrs = Math.floor(diff / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+      
+      btn.textContent = '⏳ Next Bonus in ' + hrs + 'h ' + (mins < 10 ? '0' : '') + mins + 'm ' + (secs < 10 ? '0' : '') + secs + 's';
+    }
+    
+    updateRemainingTime();
+    bonusTimerInterval = setInterval(updateRemainingTime, 1000);
+  } else {
+    if(bonusTimerInterval) clearInterval(bonusTimerInterval);
+    btn.disabled = false;
+    btn.textContent = '🎁 CLAIM DAILY BONUS';
+  }
+}
+
+var rewards=[
+{coins:5,weight:60},
+{coins:10,weight:25},
+{coins:20,weight:11},
+{coins:30,weight:3},
+{coins:50,weight:1}
+];
+
+var balance=Number(localStorage.getItem('wte_coins')||0);
+var rotation=0;
+var spinning=false;
+var pendingRewardType=null;
+var isWatchCooldown=false;
+var MAX_DAILY_ADS=100;
+
+function $(id){
+return document.getElementById(id);
+}
+
+var SVG_EYE_OPEN = '<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+var SVG_EYE_SLASH = '<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>';
+
+window.togglePinVisibility=function(inputId, btnEl){
+  var el = $(inputId);
+  if(!el) return;
+  if(el.type === 'password'){
+    el.type = 'text';
+    btnEl.innerHTML = SVG_EYE_SLASH;
+  } else {
+    el.type = 'password';
+    btnEl.innerHTML = SVG_EYE_OPEN;
+  }
+};
+
+function clearAuthErrors(){
+  var errors = document.querySelectorAll('.auth-error-msg');
+  errors.forEach(function(e){ e.textContent = ''; e.style.display = 'none'; });
+  var inputs = document.querySelectorAll('.input-error');
+  inputs.forEach(function(i){ i.classList.remove('input-error'); });
+}
+
+function showAuthError(errElementId, targetInputId, msg){
+  var el = $(errElementId);
+  if(el){
+    el.textContent = '❌ ' + msg;
+    el.style.display = 'block';
+  }
+  var inp = $(targetInputId);
+  if(inp){
+    inp.classList.remove('input-error');
+    void inp.offsetWidth;
+    inp.classList.add('input-error');
+    inp.focus();
+  }
+  toast(msg);
+}
+
+/* FIREBASE SYNC (TEST PATH) */
+function syncBalanceToFirebase(additionalData){
+  var phone = localStorage.getItem('wte_phone');
+  if(!phone) return;
+  var payload = { coins: balance, lastSeen: new Date().toISOString() };
+  if(additionalData){
+    Object.assign(payload, additionalData);
+  }
+  fetch(FIREBASE_USERS_URL + "/" + phone + ".json", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(function(e){});
+}
+
+function saveBalance(){
+localStorage.setItem('wte_coins',String(balance));
+$('balance').textContent=balance;
+if($('withdrawBalance')){$('withdrawBalance').textContent=balance;}
+syncBalanceToFirebase();
+}
+
+function toast(msg){
+var t=$('toast');
+t.textContent=msg;
+t.style.display='block';
+clearTimeout(window.__toast);
+window.__toast=setTimeout(function(){
+t.style.display='none';
+},2500);
+}
+
+window.showPage=function(id){
+document.querySelectorAll('.page').forEach(function(p){
+p.classList.remove('active');
+});
+
+var p=$(id);
+if(p){
+p.classList.add('active');
+}
+
+if(id==='withdraw'){
+syncLiveStatuses();
+renderHistory();
+saveBalance();
+}
+};
+
+function day(){
+var d=new Date();
+return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+
+function maskUpi(rawUpi){
+if(!rawUpi) return 'user***@upi';
+var parts = rawUpi.split('@');
+var handle = parts[0] || '';
+var domain = parts[1] || 'upi';
+if(handle.length <= 3){
+return handle + '***@' + domain;
+}
+return handle.substring(0,3) + '***@' + domain;
+}
+
+function watchAdsUsed(){
+if(localStorage.getItem('wte_watch_date')!==day()){
+localStorage.setItem('wte_watch_date',day());
+localStorage.setItem('wte_watch_count','0');
+}
+return Number(localStorage.getItem('wte_watch_count')||0);
+}
+
+function updateWatchButtonState(){
+var btn=$('watchBtn');
+if(!btn) return;
+if(watchAdsUsed()>=MAX_DAILY_ADS){
+btn.disabled=true;
+btn.textContent='DAILY LIMIT REACHED';
+return;
+}
+if(!isWatchCooldown){
+btn.disabled=false;
+btn.textContent='▶ WATCH VIDEO AD';
+}
+}
+
+function startWatchCooldown(){
+isWatchCooldown=true;
+var btn=$('watchBtn');
+var sec=5;
+btn.disabled=true;
+btn.textContent='Next Ad in '+sec+'s...';
+
+var cdTimer=setInterval(function(){
+sec--;
+if(sec>0){
+btn.textContent='Next Ad in '+sec+'s...';
+}else{
+clearInterval(cdTimer);
+isWatchCooldown=false;
+updateWatchButtonState();
+$('videoText').textContent='Ready to Watch';
+}
+},1000);
+}
+
+function spinUsed(){
+if(localStorage.getItem('wte_spin_date')!==day()){
+localStorage.setItem('wte_spin_date',day());
+localStorage.setItem('wte_spin_count','0');
+}
+return Number(localStorage.getItem('wte_spin_count')||0);
+}
+
+function updateSpin(){
+var left=Math.max(0,5-spinUsed());
+$('spinLeft').textContent=left;
+$('spinBtn').disabled=left===0||spinning;
+$('spinBtn').textContent=left===0?'COME BACK TOMORROW':'🎡 SPIN NOW';
+}
+
+function weighted(){
+var total=rewards.reduce(function(a,b){return a+b.weight;},0);
+var r=Math.random()*total;
+for(var i=0;i<rewards.length;i++){
+r-=rewards[i].weight;
+if(r<0){
+return rewards[i];
+}
+}
+return rewards[0];
+}
+
+function drawWheel(){
+var c=$('wheel');
+var ctx=c.getContext('2d');
+var cx=300;
+var cy=300;
+var r=285;
+var colors=['#ffcf33','#7b39c8','#32a852','#ef4d62','#2d82e8'];
+
+ctx.clearRect(0,0,600,600);
+
+rewards.forEach(function(x,i){
+var a=(-90+i*72)*Math.PI/180;
+var b=(-90+(i+1)*72)*Math.PI/180;
+
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.arc(cx,cy,r,a,b);
+ctx.closePath();
+ctx.fillStyle=colors[i];
+ctx.fill();
+ctx.strokeStyle='#fff';
+ctx.lineWidth=7;
+ctx.stroke();
+
+ctx.save();
+ctx.translate(cx,cy);
+ctx.rotate((a+b)/2);
+ctx.fillStyle='#fff';
+ctx.font='bold 42px Arial';
+ctx.textAlign='center';
+ctx.fillText(x.coins+'',r*.67,14);
+ctx.restore();
+});
+
+ctx.beginPath();
+ctx.arc(cx,cy,58,0,Math.PI*2);
+ctx.fillStyle='#fff';
+ctx.fill();
+ctx.strokeStyle='#ddd';
+ctx.lineWidth=4;
+ctx.stroke();
+
+ctx.fillStyle='#7b39c8';
+ctx.font='bold 23px Arial';
+ctx.textAlign='center';
+ctx.fillText('SPIN',cx,cy+8);
+}
+
+/* ==============================================
+   START.IO NATIVE BRIDGE CALLS
+   ============================================== */
+window.triggerAdMob=function(type){
+  getAudioContext();
+  if(type==='watch'){
+    if(watchAdsUsed()>=MAX_DAILY_ADS){
+      toast('Daily limit reached! Come back tomorrow.');
+      return;
+    }
+    if(isWatchCooldown){
+      return;
+    }
+  }
+
+  pendingRewardType=type;
+
+  // Calls MainActivity Java Bridge for Start.io Rewarded Video
+  if(window.AndroidAd && typeof window.AndroidAd.showRewarded==='function'){
+    window.AndroidAd.showRewarded();
+  }else{
+    toast('Start.io test mode active');
+    setTimeout(function(){
+      window.adMobRewardEarned();
+    },1200);
+  }
+};
+
+window.adMobRewardEarned=function(){
+  if(!pendingRewardType) return;
+
+  if(pendingRewardType==='watch'){
+    var used = watchAdsUsed() + 1;
+    localStorage.setItem('wte_watch_count', String(used));
+
+    balance+=10;
+    saveBalance();
+    syncBalanceToFirebase({ watchDate: day(), watchCount: used });
+    playWinSound();
+    $('videoText').textContent='✅ Completed +10 coins';
+    toast('🎉 +10 Coins Added!');
+
+    if(used >= MAX_DAILY_ADS){
+      updateWatchButtonState();
+    }else{
+      startWatchCooldown();
+    }
+  }
+  else if(pendingRewardType==='bonus'){
+    var n=20+Math.floor(Math.random()*11);
+    balance+=n;
+    saveBalance();
+    localStorage.setItem('wte_bonus_date',day());
+    syncBalanceToFirebase({ bonusDate: day() });
+    checkBonusState();
+    playWinSound();
+    toast('🎁 Daily Bonus +'+n+' Coins!');
+  }
+  else if(pendingRewardType==='spin'){
+    doSpin();
+  }
+
+  pendingRewardType=null;
+};
+
+/* SPIN ACTIONS */
+window.startSpin=function(){
+  if(spinning)return;
+
+  if(spinUsed()>=5){
+    toast('Today’s 5 spins limit reached');
+    return;
+  }
+
+  triggerAdMob('spin');
+};
+
+function doSpin(){
+  spinning = true;
+  var usedCount = spinUsed() + 1;
+  localStorage.setItem('wte_spin_count', String(usedCount));
+  syncBalanceToFirebase({ spinDate: day(), spinCount: usedCount });
+  updateSpin();
+
+  var reward = weighted();
+  var index = rewards.findIndex(function(x){ return x.coins === reward.coins; });
+  var target = 360 * 6 - 36 - index * 72;
+
+  rotation += target - (rotation % 360);
+  $('wheel').style.transform = 'rotate(' + rotation + 'deg)';
+
+  var totalDuration = 4200;
+  var startTime = Date.now();
+  var lastTickSector = -1;
+
+  function runPhysicsLoop(){
+    if(!spinning) return;
+    var elapsed = Date.now() - startTime;
+    if(elapsed >= totalDuration) return;
+
+    var progress = elapsed / totalDuration;
+    var ease = 1 - Math.pow(1 - progress, 3.2);
+    var currentAngle = ease * target;
+    var currentSector = Math.floor(currentAngle / 72);
+
+    if(currentSector !== lastTickSector){
+      lastTickSector = currentSector;
+      playMechanicalTick();
+      triggerHaptic(22);
     }
 
-    // 3. Show Rewarded Ad
-    function handleWatchRewardedAd() {
-      if (window.startapp) {
-        startapp.loadRewardedVideo({
-          onLoaded: function () {
-            startapp.showRewardedVideo();
-          },
-          onRewarded: function () {
-            addCoins(10);
-            alert("Success! You earned +10 Coins.");
-          },
-          onError: function (err) {
-            console.error("Rewarded Ad Error:", err);
-            alert("Ad is not ready right now. Please try again later.");
+    requestAnimationFrame(runPhysicsLoop);
+  }
+  requestAnimationFrame(runPhysicsLoop);
+
+  setTimeout(function(){
+    balance += reward.coins;
+    saveBalance();
+    playWinSound();
+    triggerHaptic([50, 60, 100]);
+    toast('🎉 You won ' + reward.coins + ' coins!');
+    spinning = false;
+    updateSpin();
+  }, totalDuration + 100);
+}
+
+/* WITHDRAW CONTROLLER (TEST FIREBASE) */
+window.withdrawCoins=function(){
+  var upi=$('upi').value.trim();
+  var amount=Number($('amount').value);
+
+  if(!upi||upi.indexOf('@')<1){
+    toast('Enter a valid UPI ID');
+    return;
+  }
+
+  if(amount<200){
+    toast('Minimum withdrawal is 200 coins (₹1)');
+    return;
+  }
+
+  if(amount>balance){
+    toast('Insufficient balance');
+    return;
+  }
+
+  var inrAmount;
+  if (amount >= 1000) {
+    var superUnits = Math.floor(amount / 1000);
+    var remainingCoins = amount % 1000;
+    var superInr = superUnits * 10;
+    var regularInr = remainingCoins / 200;
+    inrAmount = (superInr + regularInr).toFixed(2).replace(/\.00$/, '');
+  } else {
+    inrAmount = (amount / 200).toFixed(2).replace(/\.00$/, '');
+  }
+
+  balance-=amount;
+  saveBalance();
+
+  var reqId = "TEST_REQ_" + Date.now();
+  var reqDate = new Date().toLocaleString();
+  var userName = localStorage.getItem('wte_name')||'User';
+
+  var newReq = {
+    id: reqId,
+    amount: amount,
+    inr: '₹' + inrAmount,
+    upi: upi,
+    user: userName,
+    phone: localStorage.getItem('wte_phone')||'N/A',
+    date: reqDate,
+    status: 'Pending'
+  };
+
+  var h=JSON.parse(localStorage.getItem('wte_history')||'[]');
+  h.unshift(newReq);
+  localStorage.setItem('wte_history',JSON.stringify(h));
+
+  $('amount').value='';
+  renderHistory();
+  toast('Withdrawal request submitted!');
+
+  var masked = maskUpi(upi);
+  var ticker = $('liveTickerText');
+  if(ticker){
+    var liveEntry = '🟢 ' + userName + ' (' + masked + ') withdrew ₹' + inrAmount + ' • ';
+    ticker.innerHTML = liveEntry + ticker.innerHTML;
+  }
+
+  fetch(FIREBASE_DB_URL + "/" + reqId + ".json", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newReq)
+  }).catch(function(e){ console.error(e); });
+
+  var botToken = "8932759393:AAEBYxPRAHPHWrQeyCePu26ZDEQpOgLLKnU";
+  var chatId = "6748953573";
+
+  var textMsg = "🧪 *[TEST REPO] Withdrawal Request!*\n\n"
+              + "🆔 *ID:* `" + reqId + "`\n"
+              + "👤 *User:* " + userName + "\n"
+              + "📱 *Phone:* `" + (localStorage.getItem('wte_phone')||'N/A') + "`\n"
+              + "🪙 *Coins:* " + amount + " (= ₹" + inrAmount + ")\n"
+              + "💳 *UPI ID:* `" + upi + "`\n"
+              + "📅 *Date:* " + reqDate;
+
+  fetch("https://api.telegram.org/bot" + botToken + "/sendMessage", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: textMsg,
+      parse_mode: "Markdown"
+    })
+  }).catch(function(err){});
+};
+
+function fetchLiveWithdrawals(){
+fetch(FIREBASE_DB_URL + ".json")
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(!data) return;
+    var keys = Object.keys(data);
+    if(!keys.length) return;
+    
+    keys.sort().reverse();
+    var latest = keys.slice(0, 8);
+    var tickerItems = [];
+    
+    latest.forEach(function(k){
+      var item = data[k];
+      if(item && item.upi){
+        var uName = item.user || 'User';
+        var uUpi = maskUpi(item.upi);
+        var inr = item.inr || ('₹' + Math.max(1, Math.floor((item.amount || 200) / 200)));
+        tickerItems.push('🟢 ' + uName + ' (' + uUpi + ') withdrew ' + inr);
+      }
+    });
+    
+    if(tickerItems.length && $('liveTickerText')){$('liveTickerText').innerHTML = tickerItems.join(' • ') + ' • ';
+    }
+  })
+  .catch(function(e){});
+}
+
+function syncLiveStatuses(){
+var h=JSON.parse(localStorage.getItem('wte_history')||'[]');
+if(!h.length) return;
+
+fetch(FIREBASE_DB_URL + ".json")
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(!data) return;
+    var changed = false;
+    h.forEach(function(item){
+      if(data[item.id] && data[item.id].status && data[item.id].status !== item.status){
+        item.status = data[item.id].status;
+        changed = true;
+      }
+    });
+    if(changed){
+      localStorage.setItem('wte_history', JSON.stringify(h));
+      renderHistory();
+    }
+  })
+  .catch(function(err){ console.error(err); });
+}
+
+function renderHistory(){
+var h=JSON.parse(localStorage.getItem('wte_history')||'[]');
+var el=$('history');
+
+if(!h.length){
+el.innerHTML='<div class="muted">No withdrawal history available.</div>';
+return;
+}
+
+el.innerHTML='<h3 style="margin:16px 0 8px;font-size:18px;font-weight:800;color:var(--text-main)">Withdrawal History</h3>'+h.map(function(x){
+var statusColor = (x.status === 'Success' || x.status === 'Completed') ? '#10b981' : (x.status === 'Rejected' ? '#ef4444' : '#f59e0b');
+var statusIcon = (x.status === 'Success' || x.status === 'Completed') ? '✅ ' : '';
+var inrText = x.inr ? ' ('+x.inr+')' : ' (₹' + (x.amount/200).toFixed(1) + ')';
+return '<div class="history">'
++'<b>'+x.amount+' coins'+inrText+'</b><br>'
++'UPI: '+x.upi+'<br>'
++x.date+'<br>'
++'Status: <b style="color:'+statusColor+'">'+statusIcon+x.status+'</b>'
++'</div>';
+}).join('');
+}
+
+/* REFERRAL */
+function referralCode(){
+var c=localStorage.getItem('wte_ref');
+if(!c){
+c='WT'+Math.floor(100000+Math.random()*900000);
+localStorage.setItem('wte_ref',c);
+}
+return c;
+}
+
+function referralUrl(){
+return location.href.split('?')[0]+'?ref='+encodeURIComponent(referralCode());
+}
+
+function updateRef(){
+$('refCode').textContent=referralCode();$('refLink').textContent=referralUrl();
+}
+
+window.copyReferral=function(){
+var text=referralUrl();
+if(navigator.clipboard&&window.isSecureContext){
+navigator.clipboard.writeText(text).then(function(){
+toast('✅ Referral link copied');
+}).catch(function(){
+fallbackCopy(text);
+});
+}else{
+fallbackCopy(text);
+}
+};
+
+function fallbackCopy(text){
+var ta=document.createElement('textarea');
+ta.value=text;
+ta.style.position='fixed';
+ta.style.left='-9999px';
+document.body.appendChild(ta);
+ta.focus();
+ta.select();
+try{
+document.execCommand('copy');
+toast('✅ Referral link copied');
+}catch(e){
+toast('Copy failed — please select link manually');
+}
+document.body.removeChild(ta);
+}
+
+window.shareReferral=function(){
+var text='🎬 Watch to Earn App\nJoin using my referral link:\n'+referralUrl();
+var url='https://api.whatsapp.com/send?text='+encodeURIComponent(text);
+window.location.href=url;
+};
+
+/* AUTHENTICATION DASHBOARD (TEST USERS NODE) */
+window.switchAuthTab=function(mode){
+  clearAuthErrors();
+  $('tabBtnLogin').classList.toggle('active', mode==='login');$('tabBtnSignup').classList.toggle('active', mode==='signup');
+  $('authTabsNav').style.display = 'flex';$('authLoginSection').classList.toggle('active', mode==='login');
+  $('authSignupSection').classList.toggle('active', mode==='signup');$('authForgotSection').classList.remove('active');
+};
+
+window.openForgotPin=function(){
+  clearAuthErrors();
+  $('authTabsNav').style.display = 'none';$('authLoginSection').classList.remove('active');
+  $('authSignupSection').classList.remove('active');$('authForgotSection').classList.add('active');
+};
+
+window.handleSignup=function(){
+  clearAuthErrors();
+  var phone = $('authSignupPhone').value.trim();
+  var pin = $('authSignupPin').value.trim();
+  var birthYear = $('authSignupBirthYear').value.trim();
+
+  if(phone.length !== 10 || isNaN(phone)){
+    showAuthError('authSignupError', 'authSignupPhone', 'Enter a valid 10-digit phone number');
+    return;
+  }
+  if(pin.length !== 4 || isNaN(pin)){
+    showAuthError('authSignupError', 'authSignupPin', 'PIN must be 4 digits');
+    return;
+  }
+  if(!birthYear || isNaN(birthYear) || birthYear < 1940 || birthYear > 2025){
+    showAuthError('authSignupError', 'authSignupBirthYear', 'Enter valid Birth Year (e.g. 2002)');
+    return;
+  }
+
+  var btn = $('btnSubmitSignup');
+  btn.disabled = true;
+  btn.textContent = 'Creating Account...';
+
+  fetch(FIREBASE_USERS_URL + "/" + phone + ".json")
+    .then(function(res){ return res.json(); })
+    .then(function(existing){
+      if(existing){
+        btn.disabled = false;
+        btn.textContent = 'CREATE ACCOUNT';
+        switchAuthTab('login');
+        $('authLoginPhone').value = phone;
+        showAuthError('authLoginError', 'authLoginPhone', 'Account already exists! Please enter your PIN.');
+        return;
+      }
+
+      var newUser = {
+        phone: phone,
+        pin: pin,
+        birthYear: birthYear,
+        coins: balance,
+        name: localStorage.getItem('wte_name') || 'User',
+        createdAt: new Date().toISOString()
+      };
+
+      fetch(FIREBASE_USERS_URL + "/" + phone + ".json", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser)
+      }).then(function(){
+        localStorage.setItem('wte_phone', phone);
+        localStorage.setItem('wte_pin', pin);
+        localStorage.setItem('wte_birth_year', birthYear);
+        $('authOverlay').style.display = 'none';
+        btn.disabled = false;
+        btn.textContent = 'CREATE ACCOUNT';
+        updateProfileDisplay();
+        toast('🎉 Account created successfully!');
+      }).catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'CREATE ACCOUNT';
+        showAuthError('authSignupError', 'authSignupPhone', 'Network error. Try again.');
+      });
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'CREATE ACCOUNT';
+      showAuthError('authSignupError', 'authSignupPhone', 'Connection failed. Check network.');
+    });
+};
+
+window.handleLogin=function(){
+  clearAuthErrors();
+  var phone = $('authLoginPhone').value.trim();
+  var pin = $('authLoginPin').value.trim();
+
+  if(phone.length !== 10 || isNaN(phone)){
+    showAuthError('authLoginError', 'authLoginPhone', 'Enter a valid 10-digit phone number');
+    return;
+  }
+  if(pin.length !== 4 || isNaN(pin)){
+    showAuthError('authLoginError', 'authLoginPin', 'Enter 4-digit PIN');
+    return;
+  }
+
+  var btn = $('btnSubmitLogin');
+  btn.disabled = true;
+  btn.textContent = 'Logging in...';
+
+  fetch(FIREBASE_USERS_URL + "/" + phone + ".json")
+    .then(function(res){ return res.json(); })
+    .then(function(user){
+      btn.disabled = false;
+      btn.textContent = 'SECURE LOGIN';
+
+      if(!user){
+        switchAuthTab('signup');
+        $('authSignupPhone').value = phone;
+        showAuthError('authSignupError', 'authSignupPhone', 'No account found! Please Sign Up.');
+        return;
+      }
+
+      if(String(user.pin) !== String(pin)){
+        showAuthError('authLoginError', 'authLoginPin', 'Incorrect PIN! Please try again.');
+        return;
+      }
+
+      localStorage.setItem('wte_phone', phone);
+      localStorage.setItem('wte_pin', pin);
+      localStorage.setItem('wte_birth_year', user.birthYear || '');
+      if(user.name) localStorage.setItem('wte_name', user.name);
+
+      if(typeof user.coins === 'number'){
+        balance = user.coins;
+        saveBalance();
+      }
+
+      restoreCloudDailyLimits(user);
+
+      $('authOverlay').style.display = 'none';
+      updateProfileDisplay();
+      toast('✅ Welcome back!');
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'SECURE LOGIN';
+      showAuthError('authLoginError', 'authLoginPhone', 'Network error. Try again.');
+    });
+};
+
+window.handleResetPin=function(){
+  clearAuthErrors();
+  var phone = $('authForgotPhone').value.trim();
+  var birthYear = $('authForgotBirthYear').value.trim();
+  var newPin = $('authForgotNewPin').value.trim();
+
+  if(phone.length !== 10 || isNaN(phone)){
+    showAuthError('authForgotError', 'authForgotPhone', 'Enter registered 10-digit number');
+    return;
+  }
+  if(!birthYear || isNaN(birthYear)){
+    showAuthError('authForgotError', 'authForgotBirthYear', 'Enter your registered Birth Year');
+    return;
+  }
+  if(newPin.length !== 4 || isNaN(newPin)){
+    showAuthError('authForgotError', 'authForgotNewPin', 'New PIN must be 4 digits');
+    return;
+  }
+
+  var btn = $('btnSubmitForgot');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+
+  fetch(FIREBASE_USERS_URL + "/" + phone + ".json")
+    .then(function(res){ return res.json(); })
+    .then(function(user){
+      if(!user){
+        btn.disabled = false;
+        btn.textContent = 'RESET & LOGIN';
+        showAuthError('authForgotError', 'authForgotPhone', 'Account not found with this number');
+        return;
+      }
+
+      if(String(user.birthYear) !== String(birthYear)){
+        btn.disabled = false;
+        btn.textContent = 'RESET & LOGIN';
+        showAuthError('authForgotError', 'authForgotBirthYear', 'Incorrect Birth Year verification!');
+        return;
+      }
+
+      fetch(FIREBASE_USERS_URL + "/" + phone + ".json", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: newPin })
+      }).then(function(){
+        localStorage.setItem('wte_phone', phone);
+        localStorage.setItem('wte_pin', newPin);
+        if(typeof user.coins === 'number'){
+          balance = user.coins;
+          saveBalance();
+        }
+        restoreCloudDailyLimits(user);
+        $('authOverlay').style.display = 'none';
+        btn.disabled = false;
+        btn.textContent = 'RESET & LOGIN';
+        updateProfileDisplay();
+        toast('🎉 PIN reset successfully! Logged in.');
+      }).catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'RESET & LOGIN';
+        showAuthError('authForgotError', 'authForgotNewPin', 'Failed to update PIN. Try again.');
+      });
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'RESET & LOGIN';
+      showAuthError('authForgotError', 'authForgotPhone', 'Network connection error.');
+    });
+};
+
+/* LOGOUT MODAL CONTROLS */
+window.openLogoutDialog=function(){
+  $('logoutDialog').style.display = 'flex';
+};
+
+window.closeLogoutDialog=function(){
+  $('logoutDialog').style.display = 'none';
+};
+
+window.confirmLogout=function(){
+  closeLogoutDialog();
+  localStorage.removeItem('wte_phone');
+  localStorage.removeItem('wte_pin');
+  $('authOverlay').style.display = 'flex';
+  switchAuthTab('login');
+  $('authLoginPhone').value = '';$('authLoginPin').value = '';
+  updateProfileDisplay();
+  toast('Logged out successfully');
+};
+
+function restoreCloudDailyLimits(userData){
+  if(!userData) return;
+  var today = day();
+  if(userData.bonusDate === today){
+    localStorage.setItem('wte_bonus_date', today);
+  }
+  if(userData.spinDate === today && typeof userData.spinCount === 'number'){
+    localStorage.setItem('wte_spin_date', today);
+    localStorage.setItem('wte_spin_count', String(userData.spinCount));
+  }
+  if(userData.watchDate === today && typeof userData.watchCount === 'number'){
+    localStorage.setItem('wte_watch_date', today);
+    localStorage.setItem('wte_watch_count', String(userData.watchCount));
+  }
+  updateSpin();
+  checkBonusState();
+  updateWatchButtonState();
+}
+
+function checkUserAuth(){
+  var activePhone = localStorage.getItem('wte_phone');
+  if(!activePhone){
+    $('authOverlay').style.display = 'flex';
+    switchAuthTab('login');
+  } else {
+    $('authOverlay').style.display = 'none';
+    fetch(FIREBASE_USERS_URL + "/" + activePhone + ".json")
+      .then(function(res){ return res.json(); })
+      .then(function(user){
+        if(user){
+          if(typeof user.coins === 'number'){
+            balance = user.coins;
+            localStorage.setItem('wte_coins', String(balance));
+            $('balance').textContent = balance;
+            if($('withdrawBalance'))$('withdrawBalance').textContent = balance;
           }
-        });
-      } else {
-        alert("Ad network is connecting. Please retry in a few seconds.");
-      }
-    }
+          restoreCloudDailyLimits(user);
+        }
+      }).catch(function(){});
+  }
+  updateProfileDisplay();
+}
 
-    // 4. Show Interstitial Ad
-    function handleShowInterstitialAd() {
-      if (window.startapp) {
-        startapp.showInterstitial();
-        addCoins(2);
-        // Preload next interstitial ad
-        startapp.loadInterstitial();
-      } else {
-        alert("Ad is loading, please wait...");
-      }
-    }
+function updateProfileDisplay(){
+  var p = localStorage.getItem('wte_phone');
+  var el = $('profilePhoneDisplay');
+  if(el){
+    el.textContent = p ? '+91 ' + p : 'Not Logged In';
+  }
+}
 
-    // 5. Daily Bonus
-    function claimDailyBonus() {
-      addCoins(5);
-      alert("Bonus collected: +5 Coins added!");
-    }
-  </script>
+/* PROFILE & SUPPORT */
+window.saveProfile=function(){
+var name=$('profileName').value.trim();
+if(!name){
+toast('Please enter your name');
+return;
+}
+localStorage.setItem('wte_name',name);
+var phone = localStorage.getItem('wte_phone');
+if(phone){
+  fetch(FIREBASE_USERS_URL + "/" + phone + ".json", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: name })
+  }).catch(function(){});
+}
+toast('✅ Profile saved successfully');
+};
+
+window.contactSupport=function(){
+var user = localStorage.getItem('wte_name') || 'App User';
+var phone = localStorage.getItem('wte_phone') || 'N/A';
+var subject = encodeURIComponent("Support Request - Watch to Earn");
+var body = encodeURIComponent("Hello Support Team,\n\nUser: " + user + "\nPhone: " + phone + "\nIssue:\n");
+window.location.href = "mailto:" + SUPPORT_EMAIL + "?subject=" + subject + "&body=" + body;
+};
+
+/* INITIALIZATION */
+function init(){
+saveBalance();
+drawWheel();
+updateSpin();
+updateRef();
+updateWatchButtonState();
+syncLiveStatuses();
+fetchLiveWithdrawals();
+renderHistory();
+checkBonusState();
+checkUserAuth();
+
+$('profileName').value=localStorage.getItem('wte_name')||'';
+}
+
+init();
+
+})();
+</script>
+
 </body>
 </html>
