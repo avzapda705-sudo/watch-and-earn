@@ -1,49 +1,317 @@
-name: Build Android APK
+name: Build Android APK from HTML
 
 on:
-  push:
-    branches: [ "main", "master" ]
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  build-apk:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: temurin
           java-version: '17'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          node-version: 18
+          gradle-version: 8.2.1
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Cordova CLI
-        run: npm install -g cordova
-
-      - name: Initialize Platform & Build APK
+      - name: Create Android Project
+        shell: bash
         run: |
-          if [ ! -f "config.xml" ]; then
-            cordova create temp_app com.app.watchandearn WatchAndEarn
-            cp -r * temp_app/www/ 2>/dev/null || true
-            cd temp_app
-          fi
-          cordova platform add android || true
-          cordova build android --debug
+          set -e
 
-      - name: Upload Debug APK
+          mkdir -p app/src/main/java/com/watchtoearn/app
+          mkdir -p app/src/main/assets
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/mipmap-mdpi
+          mkdir -p app/src/main/res/mipmap-hdpi
+          mkdir -p app/src/main/res/mipmap-xhdpi
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
+          mkdir -p app/src/main/res/mipmap-anydpi-v26
+
+          cp index.html app/src/main/assets/index.html
+
+          if [ -f "icon.png" ]; then
+            sudo apt-get update && sudo apt-get install -y imagemagick
+
+            for size in 48:mdpi 72:hdpi 96:xhdpi 144:xxhdpi 192:xxxhdpi; do
+              dim="${size%%:*}"
+              folder="${size##*:}"
+              convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher.png
+              convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher_round.png
+            done
+
+            for size in 108:mdpi 162:hdpi 216:xhdpi 324:xxhdpi 432:xxxhdpi; do
+              canvas="${size%%:*}"
+              folder="${size##*:}"
+              inner=$(( canvas * 88 / 108 ))
+              convert icon.png -resize "${inner}x${inner}" -background none -gravity center -extent "${canvas}x${canvas}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher_foreground.png
+            done
+
+            cat > app/src/main/res/values/ic_launcher_background.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#050b1e</color>
+          </resources>
+          EOF
+
+            cat > app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@color/ic_launcher_background" />
+              <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+          </adaptive-icon>
+          EOF
+
+            cat > app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@color/ic_launcher_background" />
+              <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+          </adaptive-icon>
+          EOF
+          fi
+
+          cat > gradle.properties <<'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          android.suppressUnsupportedCompileSdk=35
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          EOF
+
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories { google(); mavenCentral(); gradlePluginPortal() }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories { 
+                  google()
+                  mavenCentral()
+                  maven { url "https://ads.startappservice.com/android-sdk" }
+              }
+          }
+          rootProject.name = "WatchToEarn"
+          include(":app")
+          EOF
+
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.2.2' apply false
+          }
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          plugins { id 'com.android.application' }
+          android {
+              namespace "com.watchtoearn.app"
+              compileSdk 35
+              defaultConfig {
+                  applicationId "com.watchtoearn.app"
+                  minSdk 24
+                  targetSdk 35
+                  versionCode 55
+                  versionName "7.1"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                      signingConfig signingConfigs.debug
+                  }
+              }
+          }
+          dependencies {
+              implementation "androidx.annotation:annotation:1.9.1"
+              implementation "androidx.cardview:cardview:1.0.0"
+              implementation "com.startapp:inapp-sdk:5.1.0"
+          }
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+              <application
+                  android:allowBackup="true"
+                  android:label="Watch To Earn"
+                  android:icon="@mipmap/ic_launcher"
+                  android:roundIcon="@mipmap/ic_launcher_round"
+                  android:supportsRtl="true"
+                  android:usesCleartextTraffic="true"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:hardwareAccelerated="true">
+                  <activity
+                      android:name=".MainActivity"
+                      android:icon="@mipmap/ic_launcher"
+                      android:roundIcon="@mipmap/ic_launcher_round"
+                      android:exported="true"
+                      android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/com/watchtoearn/app/MainActivity.java <<'EOF'
+          package com.watchtoearn.app;
+
+          import android.annotation.SuppressLint;
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.os.Handler;
+          import android.os.Looper;
+          import android.util.TypedValue;
+          import android.view.Gravity;
+          import android.webkit.JavascriptInterface;
+          import android.webkit.SslErrorHandler;
+          import android.webkit.WebChromeClient;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.widget.FrameLayout;
+          import com.startapp.sdk.adsbase.StartAppAd;
+          import com.startapp.sdk.adsbase.StartAppSDK;
+          import com.startapp.sdk.adsbase.adlisteners.VideoListener;
+          import com.startapp.sdk.ads.banner.Banner;
+
+          public class MainActivity extends Activity {
+              private WebView mainWebView;
+              private StartAppAd startAppAd;
+              private final Handler handler = new Handler(Looper.getMainLooper());
+              private static final String STARTIO_APP_ID = "206781301";
+
+              @SuppressLint("SetJavaScriptEnabled")
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  
+                  // Initialize Start.io SDK
+                  StartAppSDK.init(this, STARTIO_APP_ID, false);
+                  StartAppAd.disableSplash();
+                  startAppAd = new StartAppAd(this);
+
+                  FrameLayout root = new FrameLayout(this);
+
+                  mainWebView = new WebView(this);
+                  WebSettings s = mainWebView.getSettings();
+                  s.setJavaScriptEnabled(true);
+                  s.setDomStorageEnabled(true);
+                  s.setDatabaseEnabled(true);
+                  s.setAllowFileAccess(true);
+                  s.setAllowContentAccess(true);
+                  s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+                  mainWebView.setWebChromeClient(new WebChromeClient());
+                  mainWebView.setWebViewClient(new WebViewClient() {
+                      @Override
+                      public void onReceivedSslError(WebView view, SslErrorHandler handler, android.net.http.SslError error) {
+                          handler.proceed();
+                      }
+                  });
+                  mainWebView.addJavascriptInterface(new AdBridge(), "AndroidAd");
+                  mainWebView.loadUrl("file:///android_asset/index.html");
+
+                  int bHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
+                  FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-1, -1);
+                  wp.bottomMargin = bHeight;
+                  root.addView(mainWebView, wp);
+
+                  // Native Start.io Banner
+                  Banner startAppBanner = new Banner(this);
+                  FrameLayout.LayoutParams bp = new FrameLayout.LayoutParams(-1, bHeight);
+                  bp.gravity = Gravity.BOTTOM;
+                  root.addView(startAppBanner, bp);
+
+                  setContentView(root);
+              }
+
+              public class AdBridge {
+                  @JavascriptInterface
+                  public void showRewarded() {
+                      runOnUiThread(() -> {
+                          startAppAd.setVideoListener(new VideoListener() {
+                              @Override
+                              public void onVideoCompleted() {
+                                  handler.post(() -> {
+                                      if (mainWebView != null) {
+                                          mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
+                                      }
+                                  });
+                              }
+                          });
+                          startAppAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new com.startapp.sdk.adsbase.adlisteners.AdEventListener() {
+                              @Override
+                              public void onReceiveAd(com.startapp.sdk.adsbase.Ad ad) {
+                                  startAppAd.showAd();
+                              }
+                              @Override
+                              public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad ad) {
+                                  // Fallback auto reward if ad fails
+                                  if (mainWebView != null) {
+                                      mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
+                                  }
+                              }
+                          });
+                      });
+                  }
+
+                  @JavascriptInterface
+                  public void showInterstitial() {
+                      runOnUiThread(() -> startAppAd.showAd());
+                  }
+              }
+
+              @Override
+              protected void onDestroy() {
+                  if (mainWebView != null) mainWebView.destroy();
+                  super.onDestroy();
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (mainWebView != null && mainWebView.canGoBack()) mainWebView.goBack();
+                  else super.onBackPressed();
+              }
+          }
+          EOF
+
+      - name: Build Release APK
+        shell: bash
+        run: |
+          set -e
+          gradle wrapper --gradle-version 8.2.1 --distribution-type bin
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Prepare APK
+        shell: bash
+        run: |
+          set -e
+          mkdir -p apk-output
+          cp app/build/outputs/apk/release/app-release.apk apk-output/WatchToEarn.apk
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: WatchAndEarn-Test-APK
-          path: |
-            platforms/android/app/build/outputs/apk/debug/*.apk
-            temp_app/platforms/android/app/build/outputs/apk/debug/*.apk
+          name: WatchToEarn-APK
+          path: apk-output/WatchToEarn.apk
+          if-no-files-found: error
