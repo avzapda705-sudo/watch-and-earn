@@ -93,8 +93,8 @@ jobs:
                   applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 4
-                  versionName "1.3"
+                  versionCode 6
+                  versionName "1.5"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -154,6 +154,7 @@ jobs:
           import android.os.Looper;
           import android.util.TypedValue;
           import android.view.Gravity;
+          import android.view.View;
           import android.webkit.JavascriptInterface;
           import android.webkit.SslErrorHandler;
           import android.webkit.WebChromeClient;
@@ -166,15 +167,18 @@ jobs:
           import com.startapp.sdk.adsbase.StartAppSDK;
           import com.startapp.sdk.adsbase.adlisteners.VideoListener;
           import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
-          import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener;
           import com.startapp.sdk.adsbase.Ad;
           import com.startapp.sdk.ads.banner.Banner;
+          import com.startapp.sdk.ads.banner.BannerListener;
 
           public class MainActivity extends Activity {
               private WebView mainWebView;
-              private StartAppAd startAppAd;
+              private StartAppAd videoRewardedAd;
+              private StartAppAd interstitialAd;
+              private Banner startAppBanner;
               private final Handler handler = new Handler(Looper.getMainLooper());
               private static final String STARTIO_APP_ID = "206781301";
+              private boolean isVideoReady = false;
 
               @SuppressLint("SetJavaScriptEnabled")
               @Override
@@ -185,9 +189,15 @@ jobs:
                   StartAppSDK.setTestAdsEnabled(false);
                   StartAppAd.disableSplash();
                   
-                  startAppAd = new StartAppAd(this);
+                  videoRewardedAd = new StartAppAd(this);
+                  interstitialAd = new StartAppAd(this);
+
+                  preloadVideo();
+                  preloadInterstitial();
 
                   FrameLayout root = new FrameLayout(this);
+
+                  int bHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
 
                   mainWebView = new WebView(this);
                   WebSettings s = mainWebView.getSettings();
@@ -207,12 +217,32 @@ jobs:
                   mainWebView.addJavascriptInterface(new AdBridge(), "AndroidAd");
                   mainWebView.loadUrl("file:///android_asset/index.html");
 
-                  int bHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
                   FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-1, -1);
                   wp.bottomMargin = bHeight;
                   root.addView(mainWebView, wp);
 
-                  Banner startAppBanner = new Banner(this);
+                  startAppBanner = new Banner(this, new BannerListener() {
+                      @Override
+                      public void onReceiveAd(View bannerView) {
+                          bannerView.setVisibility(View.VISIBLE);
+                      }
+
+                      @Override
+                      public void onFailedToReceiveAd(View bannerView) {
+                          handler.postDelayed(() -> {
+                              if (startAppBanner != null) {
+                                  startAppBanner.loadAd();
+                              }
+                          }, 15000);
+                      }
+
+                      @Override
+                      public void onClick(View bannerView) {}
+
+                      @Override
+                      public void onImpression(View bannerView) {}
+                  });
+
                   FrameLayout.LayoutParams bp = new FrameLayout.LayoutParams(-1, bHeight);
                   bp.gravity = Gravity.BOTTOM;
                   root.addView(startAppBanner, bp);
@@ -220,61 +250,60 @@ jobs:
                   setContentView(root);
               }
 
+              private void preloadVideo() {
+                  isVideoReady = false;
+                  videoRewardedAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+                      @Override
+                      public void onReceiveAd(Ad ad) {
+                          isVideoReady = true;
+                      }
+                      @Override
+                      public void onFailedToReceiveAd(Ad ad) {
+                          isVideoReady = false;
+                      }
+                  });
+              }
+
+              private void preloadInterstitial() {
+                  interstitialAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
+                      @Override
+                      public void onReceiveAd(Ad ad) {}
+                      @Override
+                      public void onFailedToReceiveAd(Ad ad) {}
+                  });
+              }
+
               public class AdBridge {
                   @JavascriptInterface
                   public void showRewarded() {
                       runOnUiThread(() -> {
-                          Toast.makeText(MainActivity.this, "Connecting to Sponsor...", Toast.LENGTH_SHORT).show();
-                          
-                          startAppAd.setVideoListener(new VideoListener() {
-                              @Override
-                              public void onVideoCompleted() {
-                                  giveReward();
-                              }
-                          });
-
-                          startAppAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
-                              @Override
-                              public void onReceiveAd(Ad ad) {
-                                  startAppAd.showAd();
-                              }
-
-                              @Override
-                              public void onFailedToReceiveAd(Ad ad) {
-                                  StartAppAd fallbackAd = new StartAppAd(MainActivity.this);
-                                  fallbackAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
-                                      @Override
-                                      public void onReceiveAd(Ad ad2) {
-                                          fallbackAd.showAd(new AdDisplayListener() {
-                                              @Override
-                                              public void adHidden(Ad ad3) {
-                                                  giveReward();
-                                              }
-                                              @Override
-                                              public void adDisplayed(Ad ad3) {}
-                                              @Override
-                                              public void adClicked(Ad ad3) {}
-                                              @Override
-                                              public void adNotDisplayed(Ad ad3) {
-                                                  Toast.makeText(MainActivity.this, "Ad busy. Please try in 10s.", Toast.LENGTH_SHORT).show();
-                                              }
-                                          });
-                                      }
-
-                                      @Override
-                                      public void onFailedToReceiveAd(Ad ad2) {
-                                          Toast.makeText(MainActivity.this, "Sponsors busy. Please retry in a few seconds.", Toast.LENGTH_SHORT).show();
-                                      }
-                                  });
-                              }
-                          });
-                      });
-                  }
-
-                  private void giveReward() {
-                      handler.post(() -> {
-                          if (mainWebView != null) {
-                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
+                          if (isVideoReady) {
+                              videoRewardedAd.setVideoListener(new VideoListener() {
+                                  @Override
+                                  public void onVideoCompleted() {
+                                      handler.post(() -> {
+                                          if (mainWebView != null) {
+                                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
+                                          }
+                                      });
+                                  }
+                              });
+                              videoRewardedAd.showAd();
+                              preloadVideo();
+                          } else {
+                              Toast.makeText(MainActivity.this, "Buffering reward video, please wait 5s...", Toast.LENGTH_SHORT).show();
+                              videoRewardedAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+                                  @Override
+                                  public void onReceiveAd(Ad ad) {
+                                      isVideoReady = true;
+                                      videoRewardedAd.showAd();
+                                      preloadVideo();
+                                  }
+                                  @Override
+                                  public void onFailedToReceiveAd(Ad ad) {
+                                      Toast.makeText(MainActivity.this, "Video inventory busy. Try in 10s.", Toast.LENGTH_SHORT).show();
+                                  }
+                              });
                           }
                       });
                   }
@@ -282,15 +311,8 @@ jobs:
                   @JavascriptInterface
                   public void showInterstitial() {
                       runOnUiThread(() -> {
-                          StartAppAd interstitialAd = new StartAppAd(MainActivity.this);
-                          interstitialAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
-                              @Override
-                              public void onReceiveAd(Ad ad) {
-                                  interstitialAd.showAd();
-                              }
-                              @Override
-                              public void onFailedToReceiveAd(Ad ad) {}
-                          });
+                          interstitialAd.showAd();
+                          preloadInterstitial();
                       });
                   }
               }
