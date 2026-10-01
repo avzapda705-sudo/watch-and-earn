@@ -93,8 +93,8 @@ jobs:
                   applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 6
-                  versionName "1.5"
+                  versionCode 7
+                  versionName "1.6"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -177,7 +177,7 @@ jobs:
               private StartAppAd interstitialAd;
               private Banner startAppBanner;
               private final Handler handler = new Handler(Looper.getMainLooper());
-              private static final String STARTIO_APP_ID = "206781301";
+              private static final String STARTIO_APP_ID = "208761301";
               private boolean isVideoReady = false;
 
               @SuppressLint("SetJavaScriptEnabled")
@@ -185,6 +185,7 @@ jobs:
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
+                  // Initialize Start.io with CORRECT LIVE ID
                   StartAppSDK.init(this, STARTIO_APP_ID, false);
                   StartAppSDK.setTestAdsEnabled(false);
                   StartAppAd.disableSplash();
@@ -221,6 +222,7 @@ jobs:
                   wp.bottomMargin = bHeight;
                   root.addView(mainWebView, wp);
 
+                  // Setup Native Banner with Retry
                   startAppBanner = new Banner(this, new BannerListener() {
                       @Override
                       public void onReceiveAd(View bannerView) {
@@ -233,7 +235,7 @@ jobs:
                               if (startAppBanner != null) {
                                   startAppBanner.loadAd();
                               }
-                          }, 15000);
+                          }, 10000);
                       }
 
                       @Override
@@ -274,6 +276,7 @@ jobs:
               }
 
               public class AdBridge {
+                  // For Video Ads
                   @JavascriptInterface
                   public void showRewarded() {
                       runOnUiThread(() -> {
@@ -308,6 +311,7 @@ jobs:
                       });
                   }
 
+                  // For Interstitial Image Ads on Page Switch
                   @JavascriptInterface
                   public void showInterstitial() {
                       runOnUiThread(() -> {
