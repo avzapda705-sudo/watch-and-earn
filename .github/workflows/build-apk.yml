@@ -93,8 +93,8 @@ jobs:
                   applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 3
-                  versionName "1.2"
+                  versionCode 4
+                  versionName "1.3"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -166,28 +166,26 @@ jobs:
           import com.startapp.sdk.adsbase.StartAppSDK;
           import com.startapp.sdk.adsbase.adlisteners.VideoListener;
           import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+          import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener;
           import com.startapp.sdk.adsbase.Ad;
           import com.startapp.sdk.ads.banner.Banner;
 
           public class MainActivity extends Activity {
               private WebView mainWebView;
-              private StartAppAd rewardedVideoAd;
+              private StartAppAd startAppAd;
               private final Handler handler = new Handler(Looper.getMainLooper());
               private static final String STARTIO_APP_ID = "206781301";
-              private boolean isAdLoaded = false;
 
               @SuppressLint("SetJavaScriptEnabled")
               @Override
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
-                  // Initialize Start.io in 100% REAL LIVE MODE
                   StartAppSDK.init(this, STARTIO_APP_ID, false);
                   StartAppSDK.setTestAdsEnabled(false);
                   StartAppAd.disableSplash();
                   
-                  rewardedVideoAd = new StartAppAd(this);
-                  preloadRealAd();
+                  startAppAd = new StartAppAd(this);
 
                   FrameLayout root = new FrameLayout(this);
 
@@ -214,7 +212,6 @@ jobs:
                   wp.bottomMargin = bHeight;
                   root.addView(mainWebView, wp);
 
-                  // Real Native Banner
                   Banner startAppBanner = new Banner(this);
                   FrameLayout.LayoutParams bp = new FrameLayout.LayoutParams(-1, bHeight);
                   bp.gravity = Gravity.BOTTOM;
@@ -223,51 +220,61 @@ jobs:
                   setContentView(root);
               }
 
-              private void preloadRealAd() {
-                  isAdLoaded = false;
-                  rewardedVideoAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
-                      @Override
-                      public void onReceiveAd(Ad ad) {
-                          isAdLoaded = true;
-                      }
-                      @Override
-                      public void onFailedToReceiveAd(Ad ad) {
-                          isAdLoaded = false;
-                      }
-                  });
-              }
-
               public class AdBridge {
                   @JavascriptInterface
                   public void showRewarded() {
                       runOnUiThread(() -> {
-                          if (isAdLoaded) {
-                              rewardedVideoAd.setVideoListener(new VideoListener() {
-                                  @Override
-                                  public void onVideoCompleted() {
-                                      handler.post(() -> {
-                                          if (mainWebView != null) {
-                                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
-                                          }
-                                      });
-                                  }
-                              });
-                              rewardedVideoAd.showAd();
-                              preloadRealAd(); // Next video preloads immediately
-                          } else {
-                              Toast.makeText(MainActivity.this, "Real Ad loading, please wait 3s...", Toast.LENGTH_SHORT).show();
-                              rewardedVideoAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
-                                  @Override
-                                  public void onReceiveAd(Ad ad) {
-                                      isAdLoaded = true;
-                                      rewardedVideoAd.showAd();
-                                      preloadRealAd();
-                                  }
-                                  @Override
-                                  public void onFailedToReceiveAd(Ad ad) {
-                                      Toast.makeText(MainActivity.this, "No live fill available right now. Try in 10s.", Toast.LENGTH_SHORT).show();
-                                  }
-                              });
+                          Toast.makeText(MainActivity.this, "Connecting to Sponsor...", Toast.LENGTH_SHORT).show();
+                          
+                          startAppAd.setVideoListener(new VideoListener() {
+                              @Override
+                              public void onVideoCompleted() {
+                                  giveReward();
+                              }
+                          });
+
+                          startAppAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+                              @Override
+                              public void onReceiveAd(Ad ad) {
+                                  startAppAd.showAd();
+                              }
+
+                              @Override
+                              public void onFailedToReceiveAd(Ad ad) {
+                                  StartAppAd fallbackAd = new StartAppAd(MainActivity.this);
+                                  fallbackAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
+                                      @Override
+                                      public void onReceiveAd(Ad ad2) {
+                                          fallbackAd.showAd(new AdDisplayListener() {
+                                              @Override
+                                              public void adHidden(Ad ad3) {
+                                                  giveReward();
+                                              }
+                                              @Override
+                                              public void adDisplayed(Ad ad3) {}
+                                              @Override
+                                              public void adClicked(Ad ad3) {}
+                                              @Override
+                                              public void adNotDisplayed(Ad ad3) {
+                                                  Toast.makeText(MainActivity.this, "Ad busy. Please try in 10s.", Toast.LENGTH_SHORT).show();
+                                              }
+                                          });
+                                      }
+
+                                      @Override
+                                      public void onFailedToReceiveAd(Ad ad2) {
+                                          Toast.makeText(MainActivity.this, "Sponsors busy. Please retry in a few seconds.", Toast.LENGTH_SHORT).show();
+                                      }
+                                  });
+                              }
+                          });
+                      });
+                  }
+
+                  private void giveReward() {
+                      handler.post(() -> {
+                          if (mainWebView != null) {
+                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
                           }
                       });
                   }
