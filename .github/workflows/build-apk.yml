@@ -33,55 +33,28 @@ jobs:
           mkdir -p app/src/main/java/com/watchtoearn/app
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable
           mkdir -p app/src/main/res/mipmap-mdpi
           mkdir -p app/src/main/res/mipmap-hdpi
           mkdir -p app/src/main/res/mipmap-xhdpi
           mkdir -p app/src/main/res/mipmap-xxhdpi
           mkdir -p app/src/main/res/mipmap-xxxhdpi
-          mkdir -p app/src/main/res/mipmap-anydpi-v26
 
           cp index.html app/src/main/assets/index.html
 
-          if [ -f "icon.png" ]; then
-            sudo apt-get update && sudo apt-get install -y imagemagick
+          sudo apt-get update && sudo apt-get install -y imagemagick
 
-            for size in 48:mdpi 72:hdpi 96:xhdpi 144:xxhdpi 192:xxxhdpi; do
-              dim="${size%%:*}"
-              folder="${size##*:}"
-              convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher.png
-              convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher_round.png
-            done
-
-            for size in 108:mdpi 162:hdpi 216:xhdpi 324:xxhdpi 432:xxxhdpi; do
-              canvas="${size%%:*}"
-              folder="${size##*:}"
-              inner=$(( canvas * 88 / 108 ))
-              convert icon.png -resize "${inner}x${inner}" -background none -gravity center -extent "${canvas}x${canvas}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher_foreground.png
-            done
-
-            cat > app/src/main/res/values/ic_launcher_background.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <color name="ic_launcher_background">#050b1e</color>
-          </resources>
-          EOF
-
-            cat > app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-              <background android:drawable="@color/ic_launcher_background" />
-              <foreground android:drawable="@mipmap/ic_launcher_foreground" />
-          </adaptive-icon>
-          EOF
-
-            cat > app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml <<'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-              <background android:drawable="@color/ic_launcher_background" />
-              <foreground android:drawable="@mipmap/ic_launcher_foreground" />
-          </adaptive-icon>
-          EOF
+          # If icon.png doesn't exist, create a dummy fallback app icon
+          if [ ! -f "icon.png" ]; then
+            convert -size 512x512 xc:"#050b1e" -fill "#fbbf24" -gravity center -pointsize 180 -annotate +0+0 "W" icon.png
           fi
+
+          for size in 48:mdpi 72:hdpi 96:xhdpi 144:xxhdpi 192:xxxhdpi; do
+            dim="${size%%:*}"
+            folder="${size##*:}"
+            convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher.png
+            convert icon.png -resize "${dim}x${dim}^" -gravity center -extent "${dim}x${dim}" PNG32:app/src/main/res/mipmap-${folder}/ic_launcher_round.png
+          done
 
           cat > gradle.properties <<'EOF'
           android.useAndroidX=true
@@ -205,7 +178,6 @@ jobs:
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
-                  // Initialize Start.io SDK
                   StartAppSDK.init(this, STARTIO_APP_ID, false);
                   StartAppAd.disableSplash();
                   startAppAd = new StartAppAd(this);
@@ -235,7 +207,6 @@ jobs:
                   wp.bottomMargin = bHeight;
                   root.addView(mainWebView, wp);
 
-                  // Native Start.io Banner
                   Banner startAppBanner = new Banner(this);
                   FrameLayout.LayoutParams bp = new FrameLayout.LayoutParams(-1, bHeight);
                   bp.gravity = Gravity.BOTTOM;
@@ -265,7 +236,6 @@ jobs:
                               }
                               @Override
                               public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad ad) {
-                                  // Fallback auto reward if ad fails
                                   if (mainWebView != null) {
                                       mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
                                   }
