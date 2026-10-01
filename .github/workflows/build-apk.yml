@@ -33,6 +33,7 @@ jobs:
           mkdir -p app/src/main/java/com/watchearn/testapp
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/layout
           mkdir -p app/src/main/res/drawable
           mkdir -p app/src/main/res/mipmap-mdpi
           mkdir -p app/src/main/res/mipmap-hdpi
@@ -93,8 +94,8 @@ jobs:
                   applicationId "com.watchearn.testapp"
                   minSdk 24
                   targetSdk 35
-                  versionCode 7
-                  versionName "1.6"
+                  versionCode 8
+                  versionName "1.7"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -112,6 +113,29 @@ jobs:
               implementation "androidx.cardview:cardview:1.0.0"
               implementation "com.startapp:inapp-sdk:5.1.0"
           }
+          EOF
+
+          cat > app/src/main/res/layout/activity_main.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#0b0f19">
+
+              <com.startapp.sdk.ads.banner.Banner
+                  android:id="@+id/startAppBanner"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:layout_centerHorizontal="true" />
+
+              <WebView
+                  android:id="@+id/mainWebView"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_above="@id/startAppBanner" />
+
+          </RelativeLayout>
           EOF
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
@@ -152,8 +176,6 @@ jobs:
           import android.os.Bundle;
           import android.os.Handler;
           import android.os.Looper;
-          import android.util.TypedValue;
-          import android.view.Gravity;
           import android.view.View;
           import android.webkit.JavascriptInterface;
           import android.webkit.SslErrorHandler;
@@ -161,12 +183,12 @@ jobs:
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
-          import android.widget.FrameLayout;
           import android.widget.Toast;
           import com.startapp.sdk.adsbase.StartAppAd;
           import com.startapp.sdk.adsbase.StartAppSDK;
           import com.startapp.sdk.adsbase.adlisteners.VideoListener;
           import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+          import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener;
           import com.startapp.sdk.adsbase.Ad;
           import com.startapp.sdk.ads.banner.Banner;
           import com.startapp.sdk.ads.banner.BannerListener;
@@ -185,22 +207,22 @@ jobs:
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
                   
-                  // Initialize Start.io with CORRECT LIVE ID
+                  // Initialize Start.io in Live Mode
                   StartAppSDK.init(this, STARTIO_APP_ID, false);
                   StartAppSDK.setTestAdsEnabled(false);
                   StartAppAd.disableSplash();
                   
+                  setContentView(R.layout.activity_main);
+
+                  mainWebView = findViewById(R.id.mainWebView);
+                  startAppBanner = findViewById(R.id.startAppBanner);
+
                   videoRewardedAd = new StartAppAd(this);
                   interstitialAd = new StartAppAd(this);
 
                   preloadVideo();
                   preloadInterstitial();
 
-                  FrameLayout root = new FrameLayout(this);
-
-                  int bHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
-
-                  mainWebView = new WebView(this);
                   WebSettings s = mainWebView.getSettings();
                   s.setJavaScriptEnabled(true);
                   s.setDomStorageEnabled(true);
@@ -218,12 +240,8 @@ jobs:
                   mainWebView.addJavascriptInterface(new AdBridge(), "AndroidAd");
                   mainWebView.loadUrl("file:///android_asset/index.html");
 
-                  FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-1, -1);
-                  wp.bottomMargin = bHeight;
-                  root.addView(mainWebView, wp);
-
-                  // Setup Native Banner with Retry
-                  startAppBanner = new Banner(this, new BannerListener() {
+                  // Proper Banner Setup with Auto-Retry
+                  startAppBanner.setBannerListener(new BannerListener() {
                       @Override
                       public void onReceiveAd(View bannerView) {
                           bannerView.setVisibility(View.VISIBLE);
@@ -244,12 +262,7 @@ jobs:
                       @Override
                       public void onImpression(View bannerView) {}
                   });
-
-                  FrameLayout.LayoutParams bp = new FrameLayout.LayoutParams(-1, bHeight);
-                  bp.gravity = Gravity.BOTTOM;
-                  root.addView(startAppBanner, bp);
-
-                  setContentView(root);
+                  startAppBanner.loadAd();
               }
 
               private void preloadVideo() {
@@ -276,7 +289,6 @@ jobs:
               }
 
               public class AdBridge {
-                  // For Video Ads
                   @JavascriptInterface
                   public void showRewarded() {
                       runOnUiThread(() -> {
@@ -284,34 +296,54 @@ jobs:
                               videoRewardedAd.setVideoListener(new VideoListener() {
                                   @Override
                                   public void onVideoCompleted() {
-                                      handler.post(() -> {
-                                          if (mainWebView != null) {
-                                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
-                                          }
-                                      });
+                                      rewardUser();
                                   }
                               });
                               videoRewardedAd.showAd();
                               preloadVideo();
                           } else {
-                              Toast.makeText(MainActivity.this, "Buffering reward video, please wait 5s...", Toast.LENGTH_SHORT).show();
-                              videoRewardedAd.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+                              Toast.makeText(MainActivity.this, "Connecting to sponsor ad...", Toast.LENGTH_SHORT).show();
+                              
+                              // Smart Fallback: If Pure Video is unavailable, show Fullscreen Ad with completion reward
+                              StartAppAd fallbackAd = new StartAppAd(MainActivity.this);
+                              fallbackAd.loadAd(StartAppAd.AdMode.AUTOMATIC, new AdEventListener() {
                                   @Override
                                   public void onReceiveAd(Ad ad) {
-                                      isVideoReady = true;
-                                      videoRewardedAd.showAd();
+                                      fallbackAd.showAd(new AdDisplayListener() {
+                                          @Override
+                                          public void adHidden(Ad ad2) {
+                                              rewardUser();
+                                          }
+                                          @Override
+                                          public void adDisplayed(Ad ad2) {}
+                                          @Override
+                                          public void adClicked(Ad ad2) {}
+                                          @Override
+                                          public void adNotDisplayed(Ad ad2) {
+                                              Toast.makeText(MainActivity.this, "Ad busy. Please try in 10s.", Toast.LENGTH_SHORT).show();
+                                          }
+                                      });
                                       preloadVideo();
                                   }
+
                                   @Override
                                   public void onFailedToReceiveAd(Ad ad) {
-                                      Toast.makeText(MainActivity.this, "Video inventory busy. Try in 10s.", Toast.LENGTH_SHORT).show();
+                                      Toast.makeText(MainActivity.this, "Network busy. Please retry in a few seconds.", Toast.LENGTH_SHORT).show();
+                                      preloadVideo();
                                   }
                               });
                           }
                       });
                   }
 
-                  // For Interstitial Image Ads on Page Switch
+                  private void rewardUser() {
+                      handler.post(() -> {
+                          if (mainWebView != null) {
+                              mainWebView.evaluateJavascript("if(window.adMobRewardEarned){window.adMobRewardEarned();}", null);
+                          }
+                      });
+                  }
+
                   @JavascriptInterface
                   public void showInterstitial() {
                       runOnUiThread(() -> {
